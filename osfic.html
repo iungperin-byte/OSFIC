@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSFIC 2026 | Olimpíada Sergipana Fundamental de Inovação e Ciências</title>
+    <meta name="description" content="Soluções para um Futuro Sustentável. Uma iniciativa para despertar jovens cientistas em Sergipe.">
+    <!-- Favicon: Solzinho Verde (SVG Data URI) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%2316a34a' d='M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z'/%3E%3C/svg%3E">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'osfic-green': '#16a34a',
+                        'osfic-blue': '#0ea5e9',
+                        'osfic-yellow': '#facc15',
+                        'osfic-dark': '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos das Simulações */
+        .simulation-container {
+            position: relative;
+            background-color: #f1f5f9;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+            border: 1px solid #cbd5e1;
+            user-select: none;
+        }
+
+        /* --- PONTE --- */
+        .pillar {
+            position: absolute;
+            bottom: 0;
+            width: 50px;
+            height: 80px;
+            background-color: #475569;
+            border-radius: 4px 4px 0 0;
+            z-index: 5;
+        }
+        .pillar.left { left: 20%; }
+        .pillar.right { right: 20%; }
+
+        .bridge-deck {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 54.4%; 
+            height: 5px; 
+            background-color: #d97706;
+            z-index: 10;
+            border-radius: 2px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .broken-left, .broken-right {
+            position: absolute;
+            width: 27.2%;
+            height: 5px;
+            background-color: #d97706;
+            bottom: 80px;
+            z-index: 10;
+        }
+        .broken-left {
+            left: 22.8%;
+            transform-origin: right center;
+            animation: breakLeft 1s forwards;
+        }
+        .broken-right {
+            right: 22.8%; 
+            transform-origin: left center;
+            animation: breakRight 1s forwards;
+        }
+        @keyframes breakLeft { to { transform: rotate(30deg) translateY(30px); opacity: 0; } }
+        @keyframes breakRight { to { transform: rotate(-30deg) translateY(30px); opacity: 0; } }
+
+        .bottle { position: absolute; transition: all 0.5s ease; z-index: 15; }
+
+        /* --- CATAPULTA --- */
+        .projectile {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            z-index: 20;
+            display: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .catapult-base {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 40px;
+            color: #334155;
+            z-index: 10;
+        }
+        .measure-line {
+            position: absolute;
+            bottom: 20px;
+            height: 3px;
+            background-color: #eab308;
+            z-index: 5;
+            display: none;
+        }
+
+        /* --- CARRO --- */
+        .solar-car-body {
+            position: absolute;
+            bottom: 15px;
+            left: 10px;
+            font-size: 50px;
+            color: #854d0e; /* Madeira */
+            z-index: 20;
+            width: 70px;
+            height: 40px;
+        }
+        .solar-rod {
+            position: absolute;
+            bottom: 25px;
+            left: 33px;
+            width: 4px;
+            height: 14px; 
+            background-color: #475569;
+            z-index: 21;
+        }
+        .solar-panel {
+            position: absolute;
+            bottom: 37px;
+            left: 21px;
+            width: 35px;
+            height: 4px;
+            background-color: #0f172a;
+            border: 1px solid #94a3b8;
+            transform: rotate(-30deg);
+            z-index: 22;
+        }
+        .cloud-cover {
+            position: absolute;
+            top: 150px;
+            left: 10px;
+            font-size: 50px; 
+            color: #94a3b8;
+            z-index: 24; 
+            opacity: 0;
+            transition: transform 1s ease, opacity 0.5s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        .status-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0,0,0,0.85);
+            z-index: 26; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.5s;
+            color: #facc15;
+            font-weight: bold;
+            font-family: monospace;
+            font-size: 1.2rem;
+            text-align: center;
+            pointer-events: none;
+        }
+        .status-overlay.light-mode {
+            background-color: transparent;
+            color: #facc15;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9), 0 0 10px rgba(0,0,0,0.7);
+        }
+
+        /* --- SLIDER --- */
+        .slider-container { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 1rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
+        .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease-in-out; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .slide.active { opacity: 1; z-index: 1; }
+        .slide img.bg-img { position: absolute; top: 0, left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+        .prev, .next { cursor: pointer; position: absolute; top: 50%; width: auto; padding: 16px; margin-top: -22px; color: white; font-weight: bold; font-size: 24px; transition: 0.3s ease; border-radius: 0 3px 3px 0; user-select: none; z-index: 10; background-color: rgba(0,0,0,0.3); }
+        .next { right: 0; border-radius: 3px 0 0 3px; }
+        .prev:hover, .next:hover { background-color: rgba(0,0,0,0.8); }
+        .dots-container { position: absolute; bottom: 20px; width: 100%; text-align: center; z-index: 10; }
+        .dot { cursor: pointer; height: 12px; width: 12px; margin: 0 4px; background-color: #bbb; border-radius: 50%; display: inline-block; transition: background-color 0.6s ease; }
+        .dot.active, .dot:hover { background-color: #16a34a; }
+        
+        .hero-logo {
+            max-width: 80%;
+            height: auto;
+            max-height: 250px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+        }
+        
+        #navbar { 
+	    z-index: 999;
+	    transition:
+        	padding 0.35s ease,
+        	box-shadow 0.35s ease,
+        	background-color 0.35s ease; 
+	}
+
+	/* Classe para navbar compacta (scroll) */
+        .navbar-scrolled {
+            padding-top: 0.5rem !important;
+            padding-bottom: 0.5rem !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .navbar-scrolled .nav-logo-img {
+            height: 2.5rem !important; /* h-10 equivalent */
+            transform: scale(0.95);
+	    transition:
+        	height 0.35s ease,
+        	transform 0.35s ease;
+        }
+
+	.nav-container {
+    	    padding-top: 1rem;   /* py-4 */
+            padding-bottom: 1rem;
+	    transition:
+        	padding 0.35s ease;
+	}
+        
+        .navbar-scrolled .nav-container {
+             padding-top: 0.5rem;  /* py-2 */
+    	     padding-bottom: 0.5rem;
+        }
+
+        .navbar-scrolled .nav-menu {
+             padding-top: 0.5rem !important;
+             font-size: 0.8rem !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full bg-white/95 backdrop-blur-md shadow-md transition-all duration-300" id="navbar">
+        <div class="nav-container container mx-auto px-6 py-4 flex justify-between items-center transition-all duration-300">
+            <!-- LOGO DO CABEÇALHO CORRIGIDA: LOGO PNG MENOR (H-14) -->
+            <a href="#" class="flex items-center gap-2 z-50 text-osfic-green text-3xl">
+                <img src="Logo/osfic_inicial.png" alt="Logo OSFIC" class="nav-logo-img h-14 w-auto object-contain transition-all" style="transform: scale(1.35);">
+            </a>
+            
+            <!-- MENU DESKTOP -->
+            <div class="hidden lg:flex space-x-6 font-semibold text-gray-600 z-50 items-center text-sm">
+                <a href="#inicio" class="hover:text-osfic-green transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-house"></i> Início</a>
+                <a href="#categorias" class="hover:text-osfic-green transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-list-check"></i> Categorias</a>
+                <a href="#simulacoes" class="hover:text-osfic-blue transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-flask"></i> Regras</a>
+                <a href="#cronograma" class="hover:text-osfic-green transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-calendar-days"></i> Cronograma</a>
+                <a href="#materiais" class="hover:text-osfic-blue transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-book-open"></i> Material</a>
+                <a href="#premiacao" class="hover:text-osfic-yellow transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-trophy"></i> Premiação</a>
+                <a href="#inscricao" class="bg-osfic-green text-white px-4 py-2 rounded-full hover:bg-green-700 transition cursor-pointer shadow-md flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Inscreva-se</a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button class="lg:hidden text-gray-600 focus:outline-none z-50" onclick="toggleMenu()">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- OVERLAY MENU MOBILE -->
+    <div id="menu-overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity opacity-0"></div>
+
+    <!-- MENU MOBILE LATERAL -->
+    <div id="mobile-menu" class="fixed top-0 right-0 h-full w-72 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 lg:hidden flex flex-col p-6 overflow-y-auto">
+        <div class="flex justify-between items-center mb-8 border-b pb-4">
+            <span class="text-xl font-bold text-osfic-green">Menu</span>
+            <button onclick="toggleMenu()" class="text-gray-500 hover:text-red-500 focus:outline-none"><i class="fa-solid fa-times text-2xl"></i></button>
+        </div>
+        <div class="flex flex-col space-y-6 font-semibold text-gray-600">
+            <a href="#inicio" class="flex items-center gap-3 hover:text-osfic-green transition" onclick="toggleMenu()"><i class="fa-solid fa-house w-6"></i> Início</a>
+            <a href="#categorias" class="flex items-center gap-3 hover:text-osfic-green transition" onclick="toggleMenu()"><i class="fa-solid fa-list-check w-6"></i> Categorias</a>
+            <a href="#simulacoes" class="flex items-center gap-3 hover:text-osfic-blue transition" onclick="toggleMenu()"><i class="fa-solid fa-flask w-6"></i> Regras</a>
+            <a href="#cronograma" class="flex items-center gap-3 hover:text-osfic-green transition" onclick="toggleMenu()"><i class="fa-solid fa-calendar-days w-6"></i> Cronograma</a>
+            <a href="#materiais" class="flex items-center gap-3 hover:text-osfic-blue transition" onclick="toggleMenu()"><i class="fa-solid fa-book-open w-6"></i> Material</a>
+            <a href="#premiacao" class="flex items-center gap-3 hover:text-osfic-yellow transition" onclick="toggleMenu()"><i class="fa-solid fa-trophy w-6"></i> Premiação</a>
+            <a href="#inscricao" class="bg-osfic-green text-white px-4 py-3 rounded-xl hover:bg-green-700 transition shadow-md flex items-center justify-center gap-2 mt-4" onclick="toggleMenu()"><i class="fa-solid fa-pen-to-square"></i> Inscreva-se Agora</a>
+        </div>
+    </div>
+
+    <!-- Slider Section -->
+    <section id="inicio" class="pt-32 pb-10"> <div class="container mx-auto px-6 max-w-6xl"> <div class="slider-container">
+            <div class="slide active">
+                <img src="Destaques/01.png" alt="Destaque 1" class="bg-img">
+            </div>
+            <div class="slide">
+                <img src="Destaques/02.png" alt="Destaque 2" class="bg-img">
+            </div>
+            <div class="slide">
+                <img src="Destaques/03.png" alt="Destaque 3" class="bg-img">
+            </div>
+            
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+            <div class="dots-container">
+                <span class="dot active" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Logo & Info Section -->
+    <section class="bg-white py-12 border-b border-gray-100">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-10 max-w-5xl mx-auto">
+                <!-- Logo Estilizada (AUMENTADA 2X) -->
+                <div class="w-full md:w-1/2 flex justify-center mb-4 md:mb-0">
+                    <img src="Logo/osfic_final.png" alt="Logo OSFIC Estilizada" class="max-w-full h-auto max-h-[500px] md:max-h-[600px] filter drop-shadow-xl hover:scale-105 transition transform duration-500 cursor-pointer">
+                </div>
+                
+                <!-- Texto Institucional (COM ÍCONE SOL VERDE REMOVIDO DO TEXTO, CONFORME PEDIDO) -->
+                <div class="w-full md:w-1/2 text-left space-y-4">
+                    <h3 class="text-2xl font-bold text-osfic-dark border-l-4 border-osfic-green pl-3 flex items-center gap-3">
+                        Fomento e Parcerias
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed text-sm md:text-base">
+                        A realização da OSFIC é viabilizada pela <strong>Fundação de Apoio à Pesquisa Tecnológica do Estado de Sergipe (FAPITEC/SE)</strong>, por meio de recursos do Fundo Estadual para o Desenvolvimento Científico e Tecnológico (FUNTEC), sob a gestão da SEDETEC, através do EDITAL FAPITEC/SE/FUNTEC N° 16/2025.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed text-sm md:text-base">
+                        Esta edição conta com a parceria estratégica entre a <strong>Universidade Federal de Sergipe (UFS)</strong> e o <strong>Clube de Ciências Quarks</strong>, unindo esforços para promover uma educação "Mão na Massa" e despertar o interesse científico em jovens estudantes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Botões CTA -->
+    <section class="bg-white py-8 pb-12 shadow-sm relative z-20 border-b border-gray-200">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-center gap-6">
+            <a href="#inscricao" class="bg-osfic-green text-white px-8 py-4 rounded-full font-bold shadow-lg hover:bg-green-700 hover:shadow-xl transition transform hover:-translate-y-1 flex items-center justify-center gap-3 text-lg">
+                <i class="fa-solid fa-users"></i> Inscrever Participantes
+            </a>
+            <a href="#materiais" class="bg-white text-osfic-dark border-2 border-gray-200 px-8 py-4 rounded-full font-bold shadow-md hover:border-osfic-blue hover:text-osfic-blue transition flex items-center justify-center gap-3 text-lg">
+                <i class="fa-solid fa-book-open"></i> Ver Material Didático
+            </a>
+        </div>
+    </section>
+
+    <!-- Logos (LAYOUT HORIZONTAL) -->
+    <div class="bg-gray-50 py-8 border-b">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-4">Realização e Apoio</p>
+            <div class="flex flex-wrap md:flex-nowrap justify-center items-center gap-8 md:gap-16 opacity-90 grayscale hover:grayscale-0 transition duration-500">
+                <img src="Logo/governo.png" alt="Governo de Sergipe" class="h-16 md:h-20 w-auto object-contain">
+                <img src="Logo/fapitec.png" alt="FAPITEC" class="h-16 md:h-20 w-auto object-contain">
+                <img src="Logo/ufs.png" alt="UFS" class="h-16 md:h-20 w-auto object-contain">
+                <img src="Logo/quarks.png" alt="Quarks" class="h-16 md:h-20 w-auto object-contain">
+            </div>
+        </div>
+    </div>
+
+    <!-- Categorias -->
+    <section id="categorias" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Categorias do Desafio</h2>
+                <div class="w-24 h-1 bg-osfic-blue mx-auto rounded"></div>
+            </div>
+            <div class="grid md:grid-cols-3 gap-10">
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:border-osfic-yellow transition shadow hover:shadow-lg">
+                    <div class="w-16 h-16 bg-osfic-yellow text-white rounded-2xl flex items-center justify-center text-3xl mb-6"><i class="fa-solid fa-archway"></i></div>
+                    <h3 class="text-2xl font-bold mb-3">Ponte de Palitos</h3>
+                    <p class="text-gray-600">Construa uma ponte de 50 cm utilizando apenas palitos de picolé e cola. Visando alcançar a máxima resistência.</p>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:border-osfic-blue transition shadow hover:shadow-lg">
+                    <div class="w-16 h-16 bg-osfic-blue text-white rounded-2xl flex items-center justify-center text-3xl mb-6"><i class="fa-solid fa-rocket"></i></div>
+                    <h3 class="text-2xl font-bold mb-3">Lançador de Projéteis</h3>
+                    <p class="text-gray-600">Projete uma catapulta para lançar uma esfera de borracha o mais longe possível.</p>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:border-osfic-green transition shadow hover:shadow-lg">
+                    <div class="w-16 h-16 bg-osfic-green text-white rounded-2xl flex items-center justify-center text-3xl mb-6"><i class="fa-solid fa-solar-panel"></i></div>
+                    <h3 class="text-2xl font-bold mb-3">Carro Elétrico Solar</h3>
+                    <p class="text-gray-600">Crie um carro movido a energia solar. O desafio é percorrer a maior distância em 10 segundos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simulações (EMPILHADAS) -->
+    <section id="simulacoes" class="py-20 bg-gray-900 text-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Regras e Demonstração</h2>
+                <div class="w-24 h-1 bg-osfic-green mx-auto rounded"></div>
+                <p class="mt-4 text-gray-400">Entenda a dinâmica de avaliação.</p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-12 max-w-2xl mx-auto">
+                
+                <!-- PONTE -->
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 flex flex-col shadow-xl">
+                    <h3 class="text-2xl font-bold text-osfic-yellow mb-6 flex items-center"><i class="fa-solid fa-weight-hanging mr-3"></i>Teste da Ponte</h3>
+                    
+                    <div id="bridge-container" class="simulation-container h-80 bg-gray-200 relative mb-6 max-w-xl mx-auto w-full">
+                        <div class="pillar left"></div>
+                        <div class="pillar right"></div>
+                        <div id="bridge-wrapper"></div>
+                        
+                        <div class="absolute top-2 left-2 bg-white/90 p-2 rounded text-gray-800 text-xs font-mono border border-gray-300 z-30 shadow">
+                            <div>CARGA: <span id="bridge-load" class="font-bold text-red-600">0.0 kg</span></div>
+                            <div>TEMPO: <span id="bridge-timer" class="font-bold text-blue-600">0.00 s</span></div>
+                        </div>
+                        <div id="bridge-result" class="absolute inset-0 flex items-center justify-center bg-black/80 z-40 hidden">
+                            <div class="text-center px-4">
+                                <div class="text-osfic-yellow font-bold text-lg mb-2">RESULTADO FINAL</div>
+                                <div id="bridge-final-val" class="text-white text-sm font-mono space-y-1"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-base text-gray-300 mb-4">
+                        <p><strong>Procedimento:</strong> A ponte é apoiada nas extremidades. Garrafas (carga) são adicionadas ao centro.</p>
+                    </div>
+
+                    <div class="bg-slate-700 p-4 rounded-lg flex flex-col gap-2 mt-auto">
+                        <div class="flex items-center text-white text-xs">
+                            <i class="fa-solid fa-stopwatch text-green-400 mr-3 text-base"></i>
+                            <span>10 segundos de espera por carga.</span>
+                        </div>
+                        <div class="flex items-center text-white text-xs">
+                            <i class="fa-solid fa-calculator text-blue-400 mr-3 text-base"></i>
+                            <span>Resultado = Carga Máxima Suportada.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CATAPULTA -->
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 flex flex-col shadow-xl">
+                    <h3 class="text-2xl font-bold text-osfic-blue mb-6 flex items-center"><i class="fa-solid fa-bullseye mr-3"></i>Teste do Lançador</h3>
+                    
+                    <div id="catapult-container" class="simulation-container h-80 bg-gray-200 relative overflow-hidden mb-6 max-w-xl mx-auto w-full">
+                        <div class="catapult-base"><i class="fa-solid fa-network-wired"></i></div>
+                        <div id="catapult-ball" class="projectile"></div>
+                        <div id="measure-line" class="measure-line"></div>
+                        <div id="measure-text" class="absolute text-xs font-bold text-gray-700 bg-white px-1 rounded border border-gray-300 hidden z-10 shadow"></div>
+
+                        <div class="absolute top-2 right-2 bg-white/90 p-2 rounded text-gray-800 text-xs font-mono border border-gray-300 w-32 z-30 shadow">
+                            <div class="border-b mb-1 font-bold text-center">TENTATIVAS</div>
+                            <div id="catapult-try-1" class="flex justify-between"><span>1:</span> <span>--</span></div>
+                            <div id="catapult-try-2" class="flex justify-between"><span>2:</span> <span>--</span></div>
+                            <div id="catapult-try-3" class="flex justify-between"><span>3:</span> <span>--</span></div>
+                        </div>
+                        
+                        <div id="catapult-result" class="absolute inset-0 flex items-center justify-center bg-black/80 z-40 hidden">
+                            <div class="text-center">
+                                <div class="text-osfic-blue font-bold text-lg">RESULTADO FINAL</div>
+                                <div class="text-white text-xs mt-1">MELHOR LANÇAMENTO</div>
+                                <div id="catapult-final-val" class="text-white text-xl font-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-base text-gray-300 mb-4">
+                        <p><strong>Procedimento:</strong> Lançamento da esfera de borracha a partir da linha de base.</p>
+                    </div>
+
+                    <div class="bg-slate-700 p-4 rounded-lg flex flex-col gap-2 mt-auto">
+                        <div class="flex items-center text-white text-xs">
+                            <i class="fa-solid fa-rotate-right text-green-400 mr-3 text-base"></i>
+                            <span>Até 3 tentativas (vale a melhor).</span>
+                        </div>
+                        <div class="flex items-center text-white text-xs">
+                            <i class="fa-solid fa-ruler-horizontal text-blue-400 mr-3 text-base"></i>
+                            <span>Mede-se do ponto de lançamento até onde a esfera para.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARRO -->
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 flex flex-col shadow-xl">
+                    <h3 class="text-2xl font-bold text-osfic-green mb-6 flex items-center"><i class="fa-solid fa-bolt mr-3"></i>Teste do Carro</h3>
+                    
+                    <div id="car-container" class="simulation-container h-80 bg-gray-200 relative overflow-hidden mb-6 max-w-xl mx-auto w-full">
+                        <div class="absolute top-4 right-4 text-4xl text-yellow-500 animate-pulse"><i class="fa-solid fa-sun"></i></div>
+                        <div id="cloud-cover" class="cloud-cover"><i class="fa-solid fa-cloud"></i></div>
+                        <div id="solar-car" class="solar-car-body">
+                            <div class="solar-rod"></div>
+                            <div class="solar-panel"></div>
+                            <i class="fa-solid fa-car-side"></i>
+                        </div>
+                        <!-- Status Overlay -->
+                        <div id="status-overlay" class="status-overlay">
+                            <div>SOMBRA<br>(PARADO)</div>
+                        </div>
+                        <div class="absolute top-2 left-2 bg-white/90 p-2 rounded text-gray-800 text-xs font-mono border border-gray-300 z-10 shadow">
+                            <div>TEMPO: <span id="car-timer" class="font-bold text-red-600">0.00 s</span></div>
+                        </div>
+                        <div class="absolute top-14 left-2 bg-white/90 p-2 rounded text-gray-800 text-xs font-mono border border-gray-300 w-28 z-10 shadow">
+                            <div id="car-try-1">1: --</div>
+                            <div id="car-try-2">2: --</div>
+                            <div id="car-try-3">3: --</div>
+                        </div>
+                         <div id="car-result" class="absolute inset-0 flex items-center justify-center bg-black/80 z-40 hidden">
+                            <div class="text-center">
+                                <div class="text-osfic-green font-bold text-lg">RESULTADO FINAL</div>
+                                <div class="text-white text-xs mt-1">MAIOR DISTÂNCIA</div>
+                                <div id="car-final-val" class="text-white text-xl font-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-base text-gray-300 mb-4">
+                        <p><strong>Procedimento:</strong> O carro inicia coberto por uma sombra. Ao retirar a sombra (sol), o cronômetro inicia.</p>
+                    </div>
+
+                    <div class="bg-slate-700 p-4 rounded-lg flex flex-col gap-2 mt-auto">
+                        <div class="flex items-center text-white text-xs">
+                            <i class="fa-regular fa-clock text-green-400 mr-3 text-base"></i>
+                            <span>Tempo limite: 10 segundos exatos.</span>
+                        </div>
+                        <div class="flex items-center text-white text-xs">
+                            <i class="fa-solid fa-flag-checkered text-blue-400 mr-3 text-base"></i>
+                            <span>Vence a maior distância percorrida.</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Cronograma -->
+    <section id="cronograma" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-16">Cronograma Itinerante</h2>
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+		
+		<div class="bg-white p-6 rounded-xl shadow-lg border-b-4 border-osfic-blue flex flex-col h-full">
+    		    <div class="flex justify-between items-start mb-4">
+        		<div class="w-10 h-10 bg-osfic-blue text-white rounded-full flex items-center justify-center font-bold text-lg">1</div>
+        	    </div>
+    		    <h3 class="text-xl font-bold text-gray-800 mb-4">Aracaju</h3>
+    		    <div class="space-y-3 mb-4 flex-grow">
+        		<div class="relative pl-3 border-l-2 border-gray-300">
+            		    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Escola 01</p>
+            		    <p class="text-sm text-gray-600 font-semibold leading-tight">
+                		Escola Municipal de Ensino Fundamental Juscelino Kubitschek
+            		    </p>
+        		</div>
+        		<div class="relative pl-3 border-l-2 border-osfic-blue"> <p class="text-xs text-osfic-blue font-bold uppercase mb-1">Escola 02</p>
+            		    <p class="text-sm text-gray-600 font-semibold leading-tight">
+                		Centro de Excelência Santos Dumont
+            		    </p>
+        		</div>
+    		    </div>
+    		    <div class="flex items-center gap-2 text-osfic-green font-bold text-sm pt-4 border-t border-gray-100 mt-auto">
+        		<i class="fa-regular fa-calendar"></i> 
+        		<span>23/02/26 - 13/04/26</span>
+    		    </div>
+		</div>
+
+		<div class="bg-white p-6 rounded-xl shadow-lg border-b-4 border-osfic-blue flex flex-col h-full">
+    		    <div class="flex justify-between items-start mb-4">
+        		<div class="w-10 h-10 bg-osfic-blue text-white rounded-full flex items-center justify-center font-bold text-lg">2</div>
+        	    </div>
+    		    <h3 class="text-xl font-bold text-gray-800 mb-4">Riachão do Dantas</h3>
+    		    <div class="space-y-3 mb-4 flex-grow flex flex-col justify-center">
+        		<div class="relative pl-3 border-l-2 border-gray-300">
+            		    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Escola 01</p>
+            		    <p class="text-sm text-gray-600 font-semibold leading-tight">
+                		Escola Municipal Professor Luiz Antônio Barreto
+            		    </p>
+        		</div>
+    		    </div>
+    		    <div class="flex items-center gap-2 text-osfic-green font-bold text-sm pt-4 border-t border-gray-100 mt-auto">
+        		<i class="fa-regular fa-calendar"></i> 
+        		<span>23/02/26 - 13/04/26</span>
+    		    </div>
+		</div>
+		
+                
+		<div class="bg-white p-6 rounded-xl shadow-lg border-b-4 border-osfic-blue flex flex-col h-full">
+    		    <div class="flex justify-between items-start mb-4">
+        		<div class="w-10 h-10 bg-osfic-blue text-white rounded-full flex items-center justify-center font-bold text-lg">3</div>
+        	    </div>
+    		    <h3 class="text-xl font-bold text-gray-800 mb-4">São Miguel do Aleixo</h3>
+    		    <div class="space-y-3 mb-4 flex-grow flex flex-col justify-center">
+        		<div class="relative pl-3 border-l-2 border-gray-300">
+            		    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Escola 01</p>
+            		    <p class="text-sm text-gray-600 font-semibold leading-tight">
+                		Escola Municipal
+            		    </p>
+        		</div>
+    		    </div>
+    		    <div class="flex items-center gap-2 text-osfic-green font-bold text-sm pt-4 border-t border-gray-100 mt-auto">
+        		<i class="fa-regular fa-calendar"></i> 
+        		<span>23/02/26 - 13/04/26</span>
+    		    </div>
+		</div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Materiais -->
+    <section id="materiais" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Material Didático</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="border rounded-xl p-6 hover:shadow-lg transition bg-gray-50">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-lg text-osfic-yellow"><i class="fa-solid fa-archway text-xl"></i></div>
+                        <h3 class="font-bold text-lg">Ponte de Palitos</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <a href="Apostilas/Apostila OSFIC - Ponte de Palitos.pdf" target="_blank" class="block w-full text-center bg-white border border-gray-200 hover:bg-gray-100 py-2 rounded font-semibold text-gray-700"><i class="fa-solid fa-file-pdf text-red-500 mr-2"></i> Baixar Apostila</a>
+                        <a href="https://docs.google.com/presentation/d/1S2SRf_govA04eOOC2NVGMGaK8Kwe0ppLthElf3Zg_n8/edit?usp=drivesdk" target="_blank" class="block w-full text-center bg-blue-50 hover:bg-blue-100 py-2 rounded font-semibold text-blue-600"><i class="fa-brands fa-google-drive mr-2"></i> Slides</a>
+                    </div>
+                </div>
+                <div class="border rounded-xl p-6 hover:shadow-lg transition bg-gray-50">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="bg-blue-100 p-3 rounded-lg text-osfic-blue"><i class="fa-solid fa-rocket text-xl"></i></div>
+                        <h3 class="font-bold text-lg">Lançador de Projéteis</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <a href="Apostilas/Apostila OSFIC - Lancador de Projeteis.pdf" target="_blank" class="block w-full text-center bg-white border border-gray-200 hover:bg-gray-100 py-2 rounded font-semibold text-gray-700"><i class="fa-solid fa-file-pdf text-red-500 mr-2"></i> Baixar Apostila</a>
+                        <a href="https://docs.google.com/presentation/d/1Srdu_MbqCskzgjppdMYgnO-8cxBAUCDzowE_BHiDoSE/edit?usp=drivesdk" target="_blank" class="block w-full text-center bg-blue-50 hover:bg-blue-100 py-2 rounded font-semibold text-blue-600"><i class="fa-brands fa-google-drive mr-2"></i> Slides</a>
+                    </div>
+                </div>
+                <div class="border rounded-xl p-6 hover:shadow-lg transition bg-gray-50">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="bg-green-100 p-3 rounded-lg text-osfic-green"><i class="fa-solid fa-solar-panel text-xl"></i></div>
+                        <h3 class="font-bold text-lg">Carro Elétrico</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <a href="Apostilas/Apostila OSFIC - Carro Elétrico.pdf" target="_blank" class="block w-full text-center bg-white border border-gray-200 hover:bg-gray-100 py-2 rounded font-semibold text-gray-700"><i class="fa-solid fa-file-pdf text-red-500 mr-2"></i> Baixar Apostila</a>
+                        <a href="https://docs.google.com/presentation/d/1V_-vFe6SE144jkb4Ohv_Oq6MFWIvEH-0kg8m87FyeNM/edit?usp=drivesdk" target="_blank" class="block w-full text-center bg-blue-50 hover:bg-blue-100 py-2 rounded font-semibold text-blue-600"><i class="fa-brands fa-google-drive mr-2"></i> Slides</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premiação -->
+    <section id="premiacao" class="py-16 bg-gradient-to-r from-osfic-dark to-gray-800 text-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">Premiação</h2>
+            <div class="flex flex-col items-center md:flex-row md:items-start justify-center gap-12">
+                <div class="text-center md:w-1/3">
+                    <div class="text-6xl text-osfic-yellow mb-4"><i class="fa-solid fa-flask"></i></div>
+                    <h3 class="text-xl font-bold">Grupos Vencedores</h3>
+                    <p class="text-gray-400 mt-2">Os vencedores de cada categoria serão premiados com <strong>medalhas e Kits divertidos que usam ciência</strong>.</p>
+                </div>
+                <div class="text-center md:w-1/3">
+                    <!-- ÍCONE DRONE PERSONALIZADO SVG -->
+                    <div class="text-6xl text-osfic-blue mb-4 flex justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="6" height="6" rx="1" />
+                            <path d="M3 7a2 2 0 1 0 2 2" /><path d="M9 9L5 7" />
+                            <path d="M19 7a2 2 0 1 0 2 2" /><path d="M15 9l4-2" />
+                            <path d="M3 17a2 2 0 1 0 2 2" /><path d="M9 15l-4 2" />
+                            <path d="M19 17a2 2 0 1 0 2 2" /><path d="M15 15l4 2" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold">Professor Coordenador</h3>
+                    <p class="text-gray-400 mt-2">O professor do grupo vencedor ganha um <strong>Drone</strong>!</p>
+                </div>
+                <div class="text-center md:w-1/3">
+                    <div class="text-6xl text-osfic-green mb-4"><i class="fa-solid fa-id-card-clip"></i></div>
+                    <h3 class="text-xl font-bold">Feiras Nacionais</h3>
+                    <p class="text-gray-400 mt-2">Vencedores serão <strong>inscritos</strong> na <strong>CIENART</strong> e <strong>FEBRACE</strong>.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Inscrição CTA -->
+    <section id="inscricao" class="py-20 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <div class="max-w-3xl mx-auto bg-green-50 rounded-3xl p-10 border border-green-100 shadow-xl">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Pronto para o Desafio?</h2>
+                <a href="#" target="_blank" class="inline-block bg-osfic-green text-white text-xl font-bold px-10 py-5 rounded-full shadow-lg hover:bg-green-700 hover:shadow-2xl transition transform hover:-translate-y-1">
+                    <i class="fa-brands fa-google mr-2"></i> Inscrever Participantes
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO INSTAGRAM -->
+    <section class="bg-gray-100 py-10 border-t border-gray-200">
+        <div class="container mx-auto px-6 text-center">
+            <a href="https://instagram.com/osfic_sergipe" target="_blank" class="inline-flex flex-col items-center group">
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition duration-300 text-pink-600 mb-3">
+                    <i class="fa-brands fa-instagram text-4xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 group-hover:text-pink-600 transition">Siga a @osfic_sergipe</h3>
+                <p class="text-gray-500 text-sm">Fique por dentro das novidades no Instagram</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-2 border-t border-gray-800 text-sm">
+        <div class="container mx-auto px-6 text-center">
+	    <div class="flex justify-center mb-2" style="flex-direction: column;">
+                <img src="Logo/osfic_inicial.png" alt="Logo OSFIC Informativa" class="h-24 w-auto filter drop-shadow-lg opacity-90 hover:opacity-100 transition" style="object-fit: contain;">
+		<h3 class="text-lg font-bold text-white mb-2">Olimpíada Sergipana Fundamental de Inovação e Ciências 2026</h3>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-2 mb-4">
+                <p>Fomento e Apoio: <strong>FAPITEC/SE & Governo de Sergipe</strong></p>
+                <span class="hidden md:block mx-2">|</span>
+                <p>Realização: <strong>CCET | UFS & Clube de Ciências Quarks</strong></p>
+            </div>
+            
+            <p>&copy; Desenvolvido pelo Clube de Ciências Quarks.</p>
+        </div>
+    </footer>
+
+    <!-- LOGIC -->
+    <script>
+
+	// --- SCROLL EFFECT NAVBAR (SMOOTH RESIZE) ---
+        let lastState = false;
+
+	window.addEventListener("scroll", () => {
+    	    const navbar = document.getElementById("navbar");
+    	    const scrollY = window.scrollY;
+
+    	    const SCROLL_DOWN = 100; // entra no modo compacto
+    	    const SCROLL_UP   = 40;  // sai do modo compacto (bem antes)
+
+    	    if (!lastState && scrollY > SCROLL_DOWN) {
+        	navbar.classList.add("navbar-scrolled");
+        	lastState = true;
+    	    }
+
+    	    if (lastState && scrollY < SCROLL_UP) {
+        	navbar.classList.remove("navbar-scrolled");
+        	lastState = false;
+    	    }
+	});
+
+        // --- MOBILE MENU LOGIC (DRAWER) ---
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const overlay = document.getElementById('menu-overlay');
+            
+            if (menu.classList.contains('translate-x-full')) {
+                menu.classList.remove('hidden'); 
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    menu.classList.remove('translate-x-full');
+                    overlay.classList.remove('opacity-0');
+                }, 10);
+            } else {
+                menu.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // --- SLIDER ---
+        let slideIndex = 1;
+        showSlides(slideIndex);
+        function plusSlides(n) { showSlides(slideIndex += n); }
+        function currentSlide(n) { showSlides(slideIndex = n); }
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("slide");
+            let dots = document.getElementsByClassName("dot");
+            if (n > slides.length) {slideIndex = 1}    
+            if (n < 1) {slideIndex = slides.length}
+            for (i = 0; i < slides.length; i++) { slides[i].className = slides[i].className.replace(" active", ""); }
+            for (i = 0; i < dots.length; i++) { dots[i].className = dots[i].className.replace(" active", ""); }
+            slides[slideIndex-1].className += " active";
+            dots[slideIndex-1].className += " active";
+        }
+        setInterval(() => { plusSlides(1) }, 6000);
+
+        // --- SIMULATION 1: BRIDGE ---
+        const bWrapper = document.getElementById('bridge-wrapper');
+        const bLoad = document.getElementById('bridge-load');
+        const bTimer = document.getElementById('bridge-timer');
+        const bContainer = document.getElementById('bridge-container');
+        const bResult = document.getElementById('bridge-result');
+        const bFinalVal = document.getElementById('bridge-final-val');
+
+        async function runBridgeSim() {
+            bWrapper.innerHTML = '<div class="bridge-deck"></div>';
+            bContainer.querySelectorAll('.bottle').forEach(b => b.remove());
+            bLoad.innerText = "0.0 kg";
+            bTimer.innerText = "0.00 s";
+            bResult.classList.add('hidden');
+            
+            await new Promise(r => setTimeout(r, 1000));
+
+            const addBottle = (type, posLeft, kg) => {
+                const b = document.createElement('i');
+                b.className = "fa-solid fa-bottle-water text-blue-500 absolute bottle";
+                b.style.bottom = "86px"; 
+                b.style.left = posLeft; 
+                b.style.fontSize = type === 'small' ? '20px' : '28px';
+                b.style.opacity = '0';
+                bContainer.appendChild(b);
+                setTimeout(() => b.style.opacity = '1', 50);
+                bLoad.innerText = kg + " kg";
+                return b;
+            };
+
+            // Stage 1: 0.5kg
+            addBottle('small', 'calc(50% - 7px)', '0.5'); 
+            for(let i=0; i<=100; i+=5) {
+                bTimer.innerText = (i/10).toFixed(2) + " s";
+                await new Promise(r => setTimeout(r, 100));
+            }
+
+            // Stage 2: 1.0kg
+            bContainer.querySelectorAll('.bottle').forEach(b => b.remove());
+            addBottle('large', 'calc(50% - 10px)', '1.0');
+            for(let i=0; i<=100; i+=5) {
+                bTimer.innerText = (i/10).toFixed(2) + " s";
+                await new Promise(r => setTimeout(r, 100));
+            }
+
+            // Stage 3: 1.5kg
+            bContainer.querySelectorAll('.bottle').forEach(b => b.remove());
+            addBottle('large', 'calc(50% - 22px)', '1.5');
+            addBottle('small', 'calc(50% + 12px)', '1.5');
+
+            let time = 0;
+            let breakTime = (Math.random() * 3 + 2).toFixed(2);
+            
+            let interval = setInterval(() => {
+                time += 0.1;
+                bTimer.innerText = time.toFixed(2) + " s";
+                
+                if(time >= breakTime) {
+                    clearInterval(interval);
+                    bWrapper.innerHTML = `<div class="broken-left"></div><div class="broken-right"></div>`;
+                    const bottles = bContainer.querySelectorAll('.bottle');
+                    bottles.forEach(b => b.style.opacity = '0');
+                    
+                    setTimeout(() => {
+                        bFinalVal.innerHTML = `<div>Carga: <span class="text-osfic-yellow">1.5 kg</span></div><div>Tempo: <span class="text-osfic-blue">${breakTime} s</span></div>`;
+                        bResult.classList.remove('hidden');
+                        setTimeout(runBridgeSim, 4000);
+                    }, 1000);
+                }
+            }, 100);
+        }
+        runBridgeSim();
+
+        // --- SIMULATION 2: CATAPULT ---
+        const cBall = document.getElementById('catapult-ball');
+        const cLine = document.getElementById('measure-line');
+        const cText = document.getElementById('measure-text');
+        const cContainer = document.getElementById('catapult-container');
+        const cResult = document.getElementById('catapult-result');
+        const cFinalVal = document.getElementById('catapult-final-val');
+        let cIdx = 0;
+        let cScores = [0,0,0];
+
+        async function runCatapultSim() {
+            if(cIdx === 0) {
+                document.getElementById('catapult-try-1').innerHTML = "1: --";
+                document.getElementById('catapult-try-2').innerHTML = "2: --";
+                document.getElementById('catapult-try-3').innerHTML = "3: --";
+                cResult.classList.add('hidden');
+            }
+            if(cIdx >= 3) {
+                let best = Math.max(...cScores);
+                cFinalVal.innerText = best + "m";
+                cResult.classList.remove('hidden');
+                cIdx = 0;
+                setTimeout(runCatapultSim, 4000);
+                return;
+            }
+            
+            cLine.style.display = 'none';
+            cText.style.display = 'none';
+            cBall.style.display = 'block';
+            
+            const startX = 35;
+            const startY = 35;
+            cBall.style.left = startX + 'px';
+            cBall.style.bottom = startY + 'px';
+
+            await new Promise(r => setTimeout(r, 800));
+
+            const maxPx = cContainer.offsetWidth - 50; 
+            const distPx = Math.floor(Math.random() * (maxPx - 150) + 150);
+            const distMeters = (distPx / 25).toFixed(2);
+            cScores[cIdx] = distMeters;
+
+            let t = 0;
+            const totalTime = 100;
+            const peakHeight = 150; 
+            
+            const animInterval = setInterval(() => {
+                t++;
+                let p = t / totalTime;
+                let currentX = startX + (distPx * p);
+                let arcY = 4 * peakHeight * (p - (p*p)); 
+                let currentY = startY + arcY;
+
+                if(p >= 1) {
+                   currentY = 15;
+                   clearInterval(animInterval);
+                   
+                   cLine.style.display = 'block';
+                   cLine.style.left = '32px';
+                   cLine.style.width = (currentX - 32) + 'px';
+                   cText.style.display = 'block';
+                   cText.style.left = (currentX/2 + 16) + 'px';
+                   cText.style.bottom = '25px';
+                   cText.innerText = distMeters + 'm';
+                   document.getElementById(`catapult-try-${cIdx+1}`).innerHTML = `${cIdx+1}: <span class="font-bold text-blue-600">${distMeters}m</span>`;
+                   
+                   cIdx++;
+                   setTimeout(runCatapultSim, 1500);
+                }
+
+                cBall.style.left = currentX + 'px';
+                cBall.style.bottom = currentY + 'px';
+            }, 10);
+        }
+        window.addEventListener('load', runCatapultSim);
+
+
+        // --- SIMULATION 3: CAR (REVISED) ---
+        const car = document.getElementById('solar-car');
+        const statusOverlay = document.getElementById('status-overlay');
+        const cloud = document.getElementById('cloud-cover');
+        const timer = document.getElementById('car-timer');
+        const carCont = document.getElementById('car-container');
+        const carRes = document.getElementById('car-result');
+        const carFinal = document.getElementById('car-final-val');
+        let carIdx = 0;
+        let carScores = [0,0,0];
+
+        async function runCarSim() {
+            if(carIdx === 0) {
+                document.getElementById('car-try-1').innerText = "1: --";
+                document.getElementById('car-try-2').innerText = "2: --";
+                document.getElementById('car-try-3').innerText = "3: --";
+                carRes.classList.add('hidden');
+                statusOverlay.classList.remove('hidden');
+                statusOverlay.classList.remove('light-mode');
+                statusOverlay.innerHTML = 'SOMBRA<br>(PARADO)';
+            }
+            if(carIdx >= 3) {
+                let best = Math.max(...carScores);
+                carFinal.innerText = best + "m";
+                carRes.classList.remove('hidden');
+                statusOverlay.classList.add('hidden');
+                
+                carIdx = 0;
+                setTimeout(runCarSim, 4000);
+                return;
+            }
+            
+            statusOverlay.classList.remove('hidden'); 
+            statusOverlay.classList.remove('light-mode');
+            statusOverlay.innerHTML = 'SOMBRA<br>(PARADO)';
+            
+            car.style.left = '10px';
+            cloud.style.opacity = '1';
+            cloud.style.left = '10px';
+            timer.innerText = "0.00 s";
+
+            await new Promise(r => setTimeout(r, 1500));
+
+            statusOverlay.classList.add('light-mode');
+            statusOverlay.innerHTML = 'LUZ<br>(MOVIMENTO)';
+            
+            cloud.style.left = '350px'; 
+            cloud.style.opacity = '0';
+            
+            const maxW = carCont.offsetWidth - 90;
+            const targetPx = Math.floor(Math.random() * (maxW - 100) + 100);
+            
+            let simTime = 0;
+            let currentPx = 10;
+            const stepPx = targetPx / 30;
+
+            let interval = setInterval(() => {
+                simTime += 0.34;
+                if(simTime > 10) simTime = 10.00;
+                timer.innerText = simTime.toFixed(2) + " s";
+                currentPx += stepPx;
+                car.style.left = currentPx + "px";
+
+                if(simTime >= 10) {
+                    clearInterval(interval);
+                    cloud.style.left = currentPx + "px";
+                    cloud.style.opacity = '1';
+                    
+                    statusOverlay.classList.remove('light-mode'); 
+                    
+                    let distMeters = (targetPx / 30).toFixed(2);
+                    carScores[carIdx] = distMeters;
+                    
+                    statusOverlay.innerHTML = `<div class="text-center"><div class="text-green-400 font-bold mb-1">FIM (10 s)</div><div class="text-white text-sm">Distância: ${distMeters} m</div></div>`;
+
+                    document.getElementById(`car-try-${carIdx+1}`).innerText = `${carIdx+1}: ${distMeters}m`;
+                    carIdx++;
+                    setTimeout(runCarSim, 3000); 
+                }
+            }, 100);
+        }
+        window.addEventListener('load', runCarSim);
+    </script>
+</body>
+</html>
