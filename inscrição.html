@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscrição - OSFIC 2026</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #00008b; --bg: #f3f4f6; --text: #1f2937; --error: #dc2626; --success: #059669; --divider: #e5e7eb; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 15px; margin: 0; }
+        .container { max-width: 850px; margin: 0 auto; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        
+        /* Navegação */
+        .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+        .nav-btn { background: none; border: none; padding: 10px 15px; font-weight: bold; color: #9ca3af; border-radius: 8px; font-size: 0.9rem; }
+        .nav-btn.active { color: var(--primary); background: #eff6ff; }
+
+        /* Cores Categorias */
+        .cat-carrinho { border-left: 10px solid #22c55e !important; background: #f0fdf4; }
+        .cat-ponte { border-left: 10px solid #eab308 !important; background: #fefce8; }
+        .cat-catapulta { border-left: 10px solid #78350f !important; background: #fff7ed; }
+
+        .input-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+        @media (min-width: 600px) { .input-row { flex-direction: row; } .input-row > div { flex: 1; } }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+        
+        input, select { 
+            width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; 
+            font-size: 16px; box-sizing: border-box; transition: 0.3s; background-color: #f8fafc;
+        }
+        input:not(:placeholder-shown), select:valid { background-color: #ffffff; }
+        input:focus, select:focus { border-color: var(--primary); outline: none; background-color: #ffffff; }
+
+        .aluno-box { position: relative; margin-top: 20px; padding: 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; }
+        .btn-remove-aluno { position: absolute; top: 12px; right: 12px; color: var(--error); cursor: pointer; font-size: 1.2rem; background: none; border: none; }
+        
+        /* CPF Feedback */
+        .cpf-wrapper { position: relative; display: flex; align-items: center; }
+        .cpf-status-icon { position: absolute; right: 15px; font-size: 1.1rem; }
+        .msg-validacao { font-size: 0.75rem; font-weight: bold; margin-top: 5px; display: block; height: 15px; }
+
+        /* Passo 2: Cards e Ações */
+        .group-card { padding: 20px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background: white; margin-bottom: 10px; }
+        .card-actions { display: none; padding: 15px; background: #f1f5f9; border-radius: 0 0 12px 12px; margin-top: -10px; text-align: right; border: 1px solid #e2e8f0; margin-bottom: 25px; 
+            display: none; justify-content: flex-end; gap: 15px; /* Espaçamento entre os botões Editar/Excluir */
+        }
+
+        /* Passo 3: Resumo */
+        .resumo-section { padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; }
+        .resumo-header-main { font-weight: bold; color: var(--primary); border-bottom: 2px solid var(--primary); margin-bottom: 15px; padding-bottom: 5px; text-transform: uppercase; }
+        .resumo-line { border: 0; border-top: 1px solid var(--divider); margin: 10px 0; }
+        
+        .equipe-wrapper { margin-bottom: 30px; } /* Espaço entre cada equipe */
+        .resumo-equipe-title { font-weight: bold; color: #444; display: block; margin-bottom: 15px; font-size: 1rem; }
+        
+        .student-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
+        .student-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; }
+        .student-card hr { border: 0; border-top: 1px solid #f1f5f9; margin: 8px 0; }
+
+        .btn { padding: 16px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1rem; }
+        .btn-confirm { background: var(--primary); color: white; margin-top: 10px; }
+        .btn-back { background: #e5e7eb; color: #4b5563; margin-top: 10px; }
+        .btn-final { background: var(--success); color: white; margin-top: 25px; }
+        .text-error { color: var(--error) !important; }
+        .text-success { color: var(--success) !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="nav-tabs">
+        <button class="nav-btn active" id="tab1" onclick="showStep(1)">1. Orientador</button>
+        <button class="nav-btn" id="tab2" onclick="showStep(2)">2. Grupos</button>
+        <button class="nav-btn" id="tab3" onclick="gerarResumo()">3. Conferir</button>
+    </div>
+
+    <div id="step1" class="step">
+        <h2>Dados do Orientador</h2>
+        <div class="input-row">
+            <div><label>Escola:</label><select id="escola" required><option value="" disabled selected hidden>Selecione a escola...</option><option value="Escola A">Escola A</option><option value="Escola B">Escola B</option></select></div>
+            <div><label>Disciplina ministrada:</label><input type="text" id="profDisc" placeholder="Ex: Física" required></div>
+        </div>
+        <div class="input-row">
+            <div><label>Nome Completo:</label><input type="text" id="profNome" placeholder="Seu nome" required></div>
+            <div>
+                <label>CPF:</label>
+                <div class="cpf-wrapper">
+                    <input type="text" id="profCPF" maxlength="14" oninput="mascaraCPF(this)" onkeyup="validarUI(this)" placeholder="000.000.000-00" required>
+                    <i class="cpf-status-icon"></i>
+                </div>
+                <span class="msg-validacao"></span>
+            </div>
+        </div>
+        <button class="btn btn-confirm" onclick="validarEAvancar()">Próxima Etapa <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <div id="step2" class="step" style="display:none;">
+        <h2>Inscrição de Grupos</h2>
+        <div id="containerCards"></div>
+        <div id="triggerAddGrupo" onclick="abrirEditorGrupo()" style="border:3px dashed #cbd5e0; padding:30px; text-align:center; border-radius:12px; cursor:pointer; color:var(--primary); font-weight:bold;">
+            <i class="fa-solid fa-plus-circle"></i> Adicionar Novo Grupo
+        </div>
+
+        <div id="formAtivoGrupo" style="display:none; border: 2px solid var(--primary); padding: 25px; border-radius: 12px; margin-top: 15px; background: #fff;">
+            <h3 id="tituloEditor">Novo Grupo</h3>
+            <div class="input-row">
+                <div>
+                    <label>Categoria:</label>
+                    <select id="catGrupo" required><option value="" disabled selected hidden>Selecionar categoria</option><option value="ponte">Ponte de Palitos</option><option value="catapulta">Lançador de Projéteis</option><option value="carrinho">Carrinho Elétrico Solar</option></select>
+                </div>
+                <div><label>Qtd. de Alunos:</label><input type="number" id="qtdAlunos" min="1" max="4" placeholder="4" oninput="ajustarQuantidade()"></div>
+            </div>
+            <div id="camposAlunos"></div>
+            <button id="btnAddAluno" class="btn" style="background:#f0f9ff; color:#0369a1; border:1px dashed #0369a1; display:none; margin-top:10px;" onclick="adicionarUmAluno()">+ Adicionar Aluno</button>
+            <button class="btn btn-confirm" onclick="confirmarGrupo()">Confirmar Grupo</button>
+            <button class="btn btn-back" onclick="fecharEditor()">Cancelar</button>
+        </div>
+
+        <div style="margin-top:30px; border-top: 1px solid #eee; padding-top: 20px;">
+            <button id="btnIrResumo" class="btn btn-confirm" style="display:none; background:#00008b;" onclick="gerarResumo()">Conferir e finalizar inscrição</button>
+            <button class="btn btn-back" onclick="showStep(1)">Retornar a etapa anterior</button>
+        </div>
+    </div>
+
+    <div id="step3" class="step" style="display:none;">
+        <h2>Conferência Final</h2>
+        <div id="conteudoResumo"></div>
+        <button class="btn btn-final" onclick="alert('Inscrição pronta para envio!')">Confirmar inscrição</button>
+        <button class="btn btn-back" onclick="showStep(2)">Voltar e ajustar grupos</button>
+    </div>
+</div>
+
+<script>
+    let listaGrupos = [];
+    let alunosTemporarios = [];
+    let editandoId = null;
+
+    function mascaraCPF(i) {
+        let v = i.value.replace(/\D/g, "");
+        v = v.replace(/(\d{3})(\d)/, "$1.$2");
+        v = v.replace(/(\d{3})(\d)/, "$1.$2");
+        v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        i.value = v;
+    }
+
+    function mascaraAno(i) {
+        let num = i.value.replace(/\D/g, "");
+        if (num === "") { i.value = ""; return; }
+        i.value = num + "° ano";
+        let pos = num.length;
+        i.setSelectionRange(pos, pos);
+    }
+
+    function isValidCPF(cpf) {
+        cpf = cpf.replace(/[^\d]+/g, '');
+        if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) return false;
+        let s=0, r;
+        for (let i=1; i<=9; i++) s += parseInt(cpf.substring(i-1, i)) * (11-i);
+        r = (s*10)%11; if (r==10 || r==11) r=0;
+        if (r != parseInt(cpf.substring(9, 10))) return false;
+        s=0;
+        for (let i=1; i<=10; i++) s += parseInt(cpf.substring(i-1, i)) * (12-i);
+        r = (s*10)%11; if (r==10 || r==11) r=0;
+        return r == parseInt(cpf.substring(10, 11));
+    }
+
+    function validarUI(input) {
+        const wrapper = input.parentElement;
+        const icon = wrapper.querySelector('.cpf-status-icon');
+        const msg = wrapper.parentElement.querySelector('.msg-validacao');
+        const todosCPFs = Array.from(document.querySelectorAll('.cpf-aluno'));
+        
+        if (input.value.length === 14) {
+            const dup = todosCPFs.find(el => el !== input && el.value === input.value);
+            if (dup) {
+                icon.className = "cpf-status-icon fa-solid fa-circle-xmark text-error";
+                msg.innerText = "CPF já inserido!"; msg.className = "msg-validacao text-error";
+                return false;
+            }
+            if (isValidCPF(input.value)) {
+                icon.className = "cpf-status-icon fa-solid fa-circle-check text-success";
+                msg.innerText = "CPF válido!"; msg.className = "msg-validacao text-success";
+                return true;
+            } else {
+                icon.className = "cpf-status-icon fa-solid fa-circle-xmark text-error";
+                msg.innerText = "CPF inválido!"; msg.className = "msg-validacao text-error";
+                return false;
+            }
+        }
+        icon.className = "cpf-status-icon"; msg.innerText = "";
+    }
+
+    function renderAlunos() {
+        const container = document.getElementById('camposAlunos');
+        container.innerHTML = '';
+        alunosTemporarios.forEach((aluno, i) => {
+            container.innerHTML += `
+                <div class="aluno-box">
+                    <button class="btn-remove-aluno" onclick="removerAluno(${i})">✕</button>
+                    <label>Dados do Aluno ${i+1}</label>
+                    <input type="text" placeholder="Nome Completo" class="nome-aluno" value="${aluno.nome}" style="margin-bottom:10px;" required>
+                    <div class="input-row">
+                        <div><select class="nivel-aluno" required><option value="" disabled selected hidden>Nível de Ensino</option><option value="Ensino Fundamental" ${aluno.nivel === 'Ensino Fundamental' ? 'selected' : ''}>Ensino Fundamental</option><option value="Ensino Médio" ${aluno.nivel === 'Ensino Médio' ? 'selected' : ''}>Ensino Médio</option></select></div>
+                        <div><input type="text" placeholder="Ano / Série" class="serie-aluno" value="${aluno.serie || ''}" oninput="mascaraAno(this)" required></div>
+                    </div>
+                    <div class="cpf-wrapper"><input type="text" placeholder="CPF do Aluno" class="cpf-aluno" maxlength="14" oninput="mascaraCPF(this)" onkeyup="validarUI(this)" value="${aluno.cpf}" required><i class="cpf-status-icon"></i></div>
+                    <span class="msg-validacao"></span>
+                </div>`;
+        });
+        document.getElementById('btnAddAluno').style.display = (alunosTemporarios.length > 0 && alunosTemporarios.length < 4) ? 'block' : 'none';
+    }
+
+    function salvarAtuais() {
+        const nomes = document.querySelectorAll('.nome-aluno');
+        const cpfs = document.querySelectorAll('.cpf-aluno');
+        const series = document.querySelectorAll('.serie-aluno');
+        const niveis = document.querySelectorAll('.nivel-aluno');
+        alunosTemporarios = [];
+        nomes.forEach((n, i) => { alunosTemporarios.push({ nome: n.value, cpf: cpfs[i].value, serie: series[i].value, nivel: niveis[i].value }); });
+    }
+
+    function ajustarQuantidade() {
+        const qtd = parseInt(document.getElementById('qtdAlunos').value) || 0;
+        if(qtd > 4) return alert("Máximo de 4 alunos!");
+        salvarAtuais();
+        while(alunosTemporarios.length < qtd) alunosTemporarios.push({ nome: '', cpf: '', serie: '', nivel: '' });
+        while(alunosTemporarios.length > qtd) alunosTemporarios.pop();
+        renderAlunos();
+    }
+
+    function adicionarUmAluno() {
+        if(alunosTemporarios.length < 4) { salvarAtuais(); alunosTemporarios.push({ nome: '', cpf: '', serie: '', nivel: '' }); renderAlunos(); document.getElementById('qtdAlunos').value = alunosTemporarios.length; }
+    }
+
+    function removerAluno(idx) { salvarAtuais(); alunosTemporarios.splice(idx, 1); renderAlunos(); document.getElementById('qtdAlunos').value = alunosTemporarios.length; }
+
+    function confirmarGrupo() {
+        salvarAtuais();
+        const cat = document.getElementById('catGrupo').value;
+        if(!cat || alunosTemporarios.length === 0 || alunosTemporarios.some(a => !a.nome || !isValidCPF(a.cpf) || !a.nivel)) return alert("Preencha todos os campos obrigatórios!");
+        const dados = { id: editandoId || Date.now(), categoria: cat, alunos: [...alunosTemporarios] };
+        if(editandoId) { const idx = listaGrupos.findIndex(g => g.id === editandoId); listaGrupos[idx] = dados; } else { listaGrupos.push(dados); }
+        renderCards(); fecharEditor();
+    }
+
+    function renderCards() {
+        const container = document.getElementById('containerCards');
+        container.innerHTML = '';
+        const nomesCat = { ponte: 'Ponte de Palitos', catapulta: 'Lançador de Projéteis', carrinho: 'Carrinho Elétrico Solar' };
+        listaGrupos.forEach(g => {
+            container.innerHTML += `<div class="card-wrapper"><div class="group-card cat-${g.categoria}" onclick="toggleAcoes(${g.id})"><div><strong>${nomesCat[g.categoria]}</strong><br><small>${g.alunos.map(a => a.nome).join(', ')}</small></div><i class="fa-solid fa-circle-check" style="color:#059669; font-size:1.4rem;"></i></div><div class="card-actions" id="actions-${g.id}" style="display:none; justify-content: flex-end; gap: 15px;"><button class="btn" style="width:auto; background:#e2e8f0; padding:8px 15px;" onclick="prepararEdicao(${g.id})">Editar</button><button class="btn" style="width:auto; background:#fee2e2; color:#dc2626; padding:8px 15px;" onclick="excluirGrupo(${g.id})">Excluir</button></div></div>`;
+        });
+        document.getElementById('btnIrResumo').style.display = listaGrupos.length > 0 ? 'block' : 'none';
+    }
+
+    function toggleAcoes(id) {
+        const div = document.getElementById(`actions-${id}`);
+        const status = div.style.display === 'flex';
+        document.querySelectorAll('.card-actions').forEach(d => d.style.display = 'none');
+        div.style.display = status ? 'none' : 'flex';
+    }
+
+    function prepararEdicao(id) {
+        const g = listaGrupos.find(x => x.id === id);
+        editandoId = id; alunosTemporarios = [...g.alunos];
+        document.getElementById('catGrupo').value = g.categoria;
+        document.getElementById('formAtivoGrupo').style.display = 'block';
+        document.getElementById('triggerAddGrupo').style.display = 'none';
+        renderAlunos();
+    }
+
+    function excluirGrupo(id) { if(confirm("Deseja excluir?")) { listaGrupos = listaGrupos.filter(x => x.id !== id); renderCards(); } }
+
+    function abrirEditorGrupo() { editandoId = null; alunosTemporarios = []; document.getElementById('catGrupo').value = ""; document.getElementById('qtdAlunos').value = ""; document.getElementById('camposAlunos').innerHTML = ""; document.getElementById('formAtivoGrupo').style.display = 'block'; document.getElementById('triggerAddGrupo').style.display = 'none'; }
+
+    function fecharEditor() { document.getElementById('formAtivoGrupo').style.display = 'none'; document.getElementById('triggerAddGrupo').style.display = 'block'; }
+
+    function showStep(n) { document.querySelectorAll('.step').forEach((s, i) => s.style.display = (i+1 === n) ? 'block' : 'none'); document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i+1 === n)); }
+
+    function validarEAvancar() { if(!document.getElementById('escola').value || !isValidCPF(document.getElementById('profCPF').value)) return alert("Dados do Orientador incompletos!"); showStep(2); }
+
+    function gerarResumo() {
+        showStep(3);
+        const cats = [{ id: 'ponte', nome: 'Ponte de Palitos', bg: '#fefce8' }, { id: 'catapulta', nome: 'Lançador de Projéteis', bg: '#fff7ed' }, { id: 'carrinho', nome: 'Carrinho Elétrico Solar', bg: '#f0fdf4' }];
+        let h = `<div class="resumo-section" style="background: #fff;">
+                    <div class="resumo-header-main">Dados do Orientador</div>
+                    <div><strong>Escola:</strong> ${document.getElementById('escola').value}</div><hr class="resumo-line">
+                    <div><strong>Disciplina:</strong> ${document.getElementById('profDisc').value}</div><hr class="resumo-line">
+                    <div><strong>Nome:</strong> ${document.getElementById('profNome').value}</div><hr class="resumo-line">
+                    <div><strong>CPF:</strong> ${document.getElementById('profCPF').value}</div>
+                </div>`;
+        
+        cats.forEach(c => {
+            const gruposFiltrados = listaGrupos.filter(g => g.categoria === c.id);
+            if(gruposFiltrados.length > 0) {
+                h += `<div class="resumo-section" style="background: ${c.bg};"><div class="resumo-header-main">Grupos: ${c.nome}</div>`;
+                gruposFiltrados.forEach((g, idx) => {
+                    h += `<div class="equipe-wrapper">
+                            <span class="resumo-equipe-title">Equipe ${idx + 1}</span>
+                            <div class="student-summary-grid">
+                                ${g.alunos.map(a => `<div class="student-card">
+                                        <strong style="color:var(--primary)">${a.nome}</strong><hr>
+                                        <small>CPF: ${a.cpf}</small><br>
+                                        <small>${a.nivel} - ${a.serie}</small>
+                                    </div>`).join('')}
+                            </div>
+                          </div>`;
+                });
+                h += `</div>`;
+            }
+        });
+        document.getElementById('conteudoResumo').innerHTML = h;
+    }
+</script>
+
+</body>
+          </html>
+          
