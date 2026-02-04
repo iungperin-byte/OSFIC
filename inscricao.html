@@ -8,9 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Variáveis de Cor baseadas na OSFIC */
         :root { 
-            --primary: #16a34a; /* Verde OSFIC */
+            --primary: #16a34a; 
             --primary-dark: #15803d;
             --osfic-blue: #0ea5e9;
             --bg: #f8fafc; 
@@ -18,6 +17,7 @@
             --error: #dc2626; 
             --success: #16a34a; 
             --divider: #e2e8f0; 
+            --footer-bg: #111827; /* bg-gray-900 */
         }
 
         body { 
@@ -26,10 +26,13 @@
             color: var(--text); 
             padding: 0; 
             margin: 0; 
-            padding-top: 100px; /* Espaço para a Navbar fixa */
+            padding-top: 80px; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* Navbar Estilo Index.html */
+        /* Navbar - Tamanho da Logo Ajustado */
         .navbar {
             position: fixed;
             top: 0;
@@ -38,7 +41,7 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             z-index: 1000;
-            height: 80px;
+            height: 70px;
             display: flex;
             align-items: center;
         }
@@ -54,22 +57,22 @@
         }
 
         .nav-logo-img {
-            height: 56px;
+            height: 40px; /* Logo Menor */
             width: auto;
             object-fit: contain;
-            transform: scale(1.35);
+            transform: scale(1.1); /* Escala reduzida */
         }
 
         .btn-voltar {
             text-decoration: none;
             color: #4b5563;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
             gap: 8px;
             transition: 0.3s;
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 99px;
         }
 
@@ -80,11 +83,12 @@
 
         .container { 
             max-width: 850px; 
-            margin: 20px auto 50px; 
+            margin: 30px auto 60px; 
             background: white; 
             padding: 25px; 
             border-radius: 16px; 
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); 
+            flex-grow: 1;
         }
         
         /* Navegação do Form */
@@ -92,15 +96,10 @@
         .nav-btn { background: none; border: none; padding: 10px 15px; font-weight: bold; color: #9ca3af; border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-family: 'Poppins', sans-serif; }
         .nav-btn.active { color: var(--primary); background: #f0fdf4; }
 
-        /* Estilos de inputs e botões (mantidos conforme original) */
         .input-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
         @media (min-width: 600px) { .input-row { flex-direction: row; } .input-row > div { flex: 1; } }
         label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #475569; }
-        input, select { 
-            width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; 
-            font-size: 16px; box-sizing: border-box; transition: 0.3s; background-color: #f8fafc;
-            font-family: 'Poppins', sans-serif;
-        }
+        input, select { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: 0.3s; background-color: #f8fafc; font-family: 'Poppins', sans-serif; }
         input:focus, select:focus { border-color: var(--primary); outline: none; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1); }
         
         .aluno-box { position: relative; margin-top: 20px; padding: 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; }
@@ -125,7 +124,7 @@
         .cat-ponte { border-left: 10px solid #eab308 !important; background: #fefce8; }
         .cat-catapulta { border-left: 10px solid #78350f !important; background: #fff7ed; }
 
-        /* MODAIS */
+        /* Modais */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: none; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(4px); }
         .modal-content { background: white; padding: 30px; border-radius: 20px; max-width: 480px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); animation: modalShow 0.3s ease-out; }
         @keyframes modalShow { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -134,6 +133,19 @@
         .modal-text { color: #64748b; margin-bottom: 25px; line-height: 1.6; text-align: left; background: #f8fafc; padding: 20px; border-radius: 12px; font-size: 0.95rem; border: 1px solid #e2e8f0; }
         .modal-buttons { display: flex; gap: 10px; }
         .btn-modal { padding: 12px; border-radius: 8px; font-weight: bold; flex: 1; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; }
+
+        /* Rodapé Estilo Original */
+        footer {
+            background-color: var(--footer-bg);
+            color: #9ca3af; /* text-gray-400 */
+            padding: 30px 0;
+            border-top: 1px solid #1f2937;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .footer-title { color: white; font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .footer-divider { margin: 0 10px; color: #374151; }
+        @media (max-width: 768px) { .footer-divider { display: none; } }
     </style>
 </head>
 <body>
@@ -144,7 +156,7 @@
             <img src="Logo/osfic_inicial.png" alt="Logo OSFIC" class="nav-logo-img">
         </a>
         <a href="index.html" class="btn-voltar">
-            <i class="fa-solid fa-arrow-left"></i> Retornar para a página principal
+            <i class="fa-solid fa-house"></i> Página Inicial
         </a>
     </div>
 </nav>
@@ -224,12 +236,25 @@
     </div>
 </div>
 
+<footer>
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+        <div class="footer-title">Olimpíada Sergipana Fundamental de Inovação e Ciências 2026</div>
+        
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin-bottom: 15px;">
+            <p>Fomento e Apoio: <strong>FAPITEC/SE & Governo de Sergipe</strong></p>
+            <span class="footer-divider">|</span>
+            <p>Realização: <strong>CCET | UFS & Clube de Ciências Quarks</strong></p>
+        </div>
+        
+        <p>&copy; Desenvolvido pelo Clube de Ciências Quarks.</p>
+    </div>
+</footer>
+
 <script>
     let listaGrupos = [];
     let alunosTemporarios = [];
     let editandoId = null;
 
-    // MODAL
     function showAlert(titulo, texto, tipo = 'info') {
         const modal = document.getElementById('customModal');
         document.getElementById('modalTitle').innerText = titulo;
@@ -251,7 +276,6 @@
 
     function closeModal() { document.getElementById('customModal').style.display = 'none'; }
 
-    // CPF E MÁSCARAS
     function mascaraCPF(i) {
         let v = i.value.replace(/\D/g, "");
         v = v.replace(/(\d{3})(\d)/, "$1.$2");
@@ -284,7 +308,6 @@
     function validarUI(input) {
         const icon = input.parentElement.querySelector('.cpf-status-icon');
         const msg = input.parentElement.parentElement.querySelector('.msg-validacao');
-        
         if (input.value.length === 14) {
             if (isValidCPF(input.value)) {
                 icon.className = "cpf-status-icon fa-solid fa-circle-check text-success";
@@ -302,7 +325,6 @@
         }
     }
 
-    // NOVA FUNÇÃO: Validação centralizada do Passo 1
     function checkPasso1Completo() {
         let erros = [];
         if (!document.getElementById('escola').value) erros.push("• Escola não selecionada.");
@@ -313,33 +335,26 @@
         return erros;
     }
 
-    // PASSO 1 - BOTÃO PROSSEGUIR
     function validarEAvancar() {
         const erros = checkPasso1Completo();
         if (erros.length > 0) showAlert("Dados do Orientador", erros.join("<br>"), "error");
         else showStep(2);
     }
 
-    // NAVEGAÇÃO ENTRE PASSOS (Atualizada com Bloqueio)
     function showStep(n) { 
-        // Bloqueio: Se tentar ir para passo 2 ou 3 sem o passo 1 estar OK
         if (n > 1) {
             const errosPasso1 = checkPasso1Completo();
             if (errosPasso1.length > 0) {
                 return showAlert("Acesso Negado", "Para acessar as próximas etapas, você precisa primeiro preencher corretamente todos os <b>Dados do Orientador</b> no Passo 1.", "error");
             }
         }
-
-        // Bloqueio: Se tentar ir para passo 3 sem grupos
         if (n === 3 && listaGrupos.length === 0) {
             return showAlert("Atenção", "Cadastre ao menos um grupo antes de prosseguir para a conferência final.", "info");
         }
-
         document.querySelectorAll('.step').forEach((s, i) => s.style.display = (i+1 === n) ? 'block' : 'none'); 
         document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i+1 === n)); 
     }
 
-    // FUNÇÕES DE ALUNOS E GRUPOS (Mantidas Conforme Original)
     function renderAlunos() {
         const container = document.getElementById('camposAlunos');
         container.innerHTML = '';
