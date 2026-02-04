@@ -14,8 +14,8 @@
             --osfic-blue: #0ea5e9;
             --bg: #f8fafc; 
             --text: #1e293b; 
-            --error: #dc2626; /* Vermelho para erro */
-            --success: #16a34a; /* Verde para sucesso */
+            --error: #dc2626; 
+            --success: #16a34a; 
             --divider: #e2e8f0; 
             --footer-bg: #111827;
         }
@@ -56,11 +56,7 @@
             align-items: center;
         }
 
-        .nav-logo-img {
-            height: 38px;
-            width: auto;
-            object-fit: contain;
-        }
+        .nav-logo-img { height: 38px; width: auto; object-fit: contain; }
 
         .btn-voltar {
             text-decoration: none;
@@ -75,10 +71,7 @@
             border-radius: 99px;
         }
 
-        .btn-voltar:hover {
-            background: #f1f5f9;
-            color: var(--primary);
-        }
+        .btn-voltar:hover { background: #f1f5f9; color: var(--primary); }
 
         .container { 
             max-width: 850px; 
@@ -90,7 +83,6 @@
             flex-grow: 1;
         }
         
-        /* Navegação do Form */
         .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
         .nav-btn { background: none; border: none; padding: 10px 15px; font-weight: bold; color: #9ca3af; border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-family: 'Poppins', sans-serif; }
         .nav-btn.active { color: var(--primary); background: #f0fdf4; }
@@ -106,13 +98,12 @@
             font-family: 'Poppins', sans-serif; 
         }
 
-        /* Estilização da setinha do Select (trazendo para dentro) */
         select {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 1rem center; 
-            background-size: 1.2em;
+            background-size: 1.1em;
             padding-right: 2.5rem;
         }
 
@@ -121,7 +112,6 @@
         .aluno-box { position: relative; margin-top: 20px; padding: 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; }
         .btn-remove-aluno { position: absolute; top: 12px; right: 12px; color: var(--error); cursor: pointer; font-size: 1.2rem; background: none; border: none; }
         
-        /* Cores de Validação */
         .text-error { color: var(--error) !important; }
         .text-success { color: var(--success) !important; }
 
@@ -131,6 +121,7 @@
 
         .group-card { padding: 20px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background: white; margin-bottom: 10px; transition: 0.2s; }
         .card-actions { display: none; padding: 15px; background: #f1f5f9; border-radius: 0 0 12px 12px; margin-top: -10px; text-align: right; border: 1px solid #e2e8f0; margin-bottom: 25px; justify-content: flex-end; gap: 15px; }
+        
         .resumo-section { padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; }
         .resumo-header-main { font-weight: bold; color: var(--primary); border-bottom: 2px solid var(--primary); margin-bottom: 15px; padding-bottom: 5px; text-transform: uppercase; }
         
@@ -139,35 +130,54 @@
         .btn-back { background: #e2e8f0; color: #475569; margin-top: 10px; }
         .btn-final { background: var(--success); color: white; margin-top: 25px; }
 
-        /* Categorias */
         .cat-carrinho { border-left: 10px solid #22c55e !important; background: #f0fdf4; }
         .cat-ponte { border-left: 10px solid #eab308 !important; background: #fefce8; }
         .cat-catapulta { border-left: 10px solid #78350f !important; background: #fff7ed; }
 
-        /* Modais */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: none; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(4px); }
-        .modal-content { background: white; padding: 30px; border-radius: 20px; max-width: 480px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); animation: modalShow 0.3s ease-out; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); display: none; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(2px); }
+        .modal-content { background: white; padding: 35px; border-radius: 16px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.1); animation: modalShow 0.25s ease-out; }
+        @keyframes modalShow { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-icon { font-size: 3rem; margin-bottom: 10px; }
+        .modal-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 12px; color: var(--text); }
+        .modal-text { color: #4b5563; margin-bottom: 25px; line-height: 1.5; font-size: 0.95rem; }
+        .modal-buttons { display: flex; gap: 12px; }
+        .btn-modal { padding: 12px; border-radius: 8px; font-weight: bold; flex: 1; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; }
 
-        /* Footer Refinado */
+        /* Footer Ajustado */
         footer {
             background-color: var(--footer-bg);
             color: #9ca3af;
-            padding: 25px 0;
+            padding: 20px 0;
             border-top: 1px solid #1f2937;
             text-align: center;
-            font-size: 0.7rem; /* Fonte reduzida */
+            font-size: 0.72rem; 
         }
-        .footer-title { color: white; font-weight: bold; font-size: 0.95rem; margin-bottom: 8px; }
+        .footer-title { 
+            color: white; 
+            font-weight: bold; 
+            font-size: 0.95rem; 
+            margin-bottom: 0px; /* Sem espaço abaixo do título */
+        }
         .footer-info-row { 
             display: flex; 
             justify-content: center; 
             align-items: center; 
             gap: 15px; 
-            margin-bottom: 10px;
+            margin-top: 8px;
             flex-wrap: wrap;
         }
-        .footer-divider { color: #4b5563; font-weight: bold; font-size: 1rem; }
-        @media (max-width: 768px) { .footer-divider { display: none; } }
+        .footer-info-row p { margin: 0; } /* Remove margens padrão dos parágrafos */
+        .footer-divider { 
+            color: #4b5563; 
+            font-weight: bold; 
+            font-size: 1rem; 
+            display: flex;
+            align-items: center;
+        }
+        @media (max-width: 768px) { 
+            .footer-divider { display: none; } 
+            .footer-info-row { gap: 4px; flex-direction: column; } /* Compacta o mobile */
+        }
     </style>
 </head>
 <body>
@@ -267,7 +277,7 @@
             <span class="footer-divider">|</span>
             <p>Realização: <strong>CCET | UFS & Clube de Ciências Quarks</strong></p>
         </div>
-        <p style="opacity: 0.7;">&copy; Desenvolvido pelo Clube de Ciências Quarks.</p>
+        <p style="opacity: 0.7; margin-top: 10px;">&copy; Desenvolvido pelo Clube de Ciências Quarks.</p>
     </div>
 </footer>
 
@@ -280,7 +290,7 @@
         const modal = document.getElementById('customModal');
         document.getElementById('modalTitle').innerText = titulo;
         document.getElementById('modalText').innerHTML = texto;
-        document.getElementById('modalIcon').innerHTML = tipo === 'success' ? '<i class="fa-solid fa-circle-check" style="color:var(--success)"></i>' : (tipo === 'error' ? '<i class="fa-solid fa-circle-xmark" style="color:var(--error)"></i>' : '<i class="fa-solid fa-circle-info" style="color:var(--primary)"></i>');
+        document.getElementById('modalIcon').innerHTML = tipo === 'success' ? '<i class="fa-solid fa-circle-check" style="color:var(--success)"></i>' : (tipo === 'error' ? '<i class="fa-solid fa-circle-xmark" style="color:var(--error)"></i>' : '<i class="fa-solid fa-circle-info" style="color:var(--osfic-blue)"></i>');
         document.getElementById('modalButtons').innerHTML = `<button class="btn-modal btn-confirm" onclick="closeModal()">Entendido</button>`;
         modal.style.display = 'flex';
     }
@@ -345,7 +355,7 @@
 
     function validarEAvancar() {
         const erros = checkPasso1Completo();
-        if (erros.length > 0) showAlert("Dados do Orientador", erros.join("<br>"), "error");
+        if (erros.length > 0) showAlert("Atenção", erros.join("<br>"), "error");
         else showStep(2);
     }
 
@@ -353,7 +363,7 @@
         if (n > 1) {
             const errosPasso1 = checkPasso1Completo();
             if (errosPasso1.length > 0) {
-                return showAlert("Acesso Negado", "Preencha corretamente os <b>Dados do Orientador</b> no Passo 1.", "error");
+                return showAlert("Acesso Negado", "Complete os <b>Dados do Orientador</b> no Passo 1.", "error");
             }
         }
         if (n === 3 && listaGrupos.length === 0) {
@@ -414,17 +424,16 @@
         let erros = [];
         const cat = document.getElementById('catGrupo').value;
         if (!cat) erros.push("• Escolha uma <b>Categoria</b>.");
-        if (alunosTemporarios.length === 0) {
-            erros.push("• Adicione ao menos um aluno.");
-        } else {
+        if (alunosTemporarios.length === 0) erros.push("• Adicione ao menos um aluno.");
+        else {
             alunosTemporarios.forEach((a, i) => {
                 let prefix = `<b>Aluno ${i+1}:</b> `;
                 if (!a.nome.trim()) erros.push(prefix + "Nome não informado.");
                 if (!isValidCPF(a.cpf)) erros.push(prefix + "CPF inválido.");
-                if (!a.nivel) erros.push(prefix + "Nível de ensino não selecionado.");
+                if (!a.nivel) erros.push(prefix + "Selecione o Nível.");
                 else {
                     let numSerie = parseInt(a.serie.replace(/\D/g, ""));
-                    if (!numSerie) erros.push(prefix + "Informe o ano/série.");
+                    if (!numSerie) erros.push(prefix + "Informe o Ano/Série.");
                 }
             });
         }
@@ -466,20 +475,16 @@
     function excluirGrupo(id) { 
         const modal = document.getElementById('customModal');
         document.getElementById('modalTitle').innerText = "Excluir Grupo";
-        document.getElementById('modalText').innerHTML = "Deseja remover este grupo?";
-        document.getElementById('modalIcon').innerHTML = '<i class="fa-solid fa-circle-question" style="color:var(--primary)"></i>';
-        document.getElementById('modalButtons').innerHTML = `<button class="btn-modal btn-back" style="margin-top:0" onclick="closeModal()">Cancelar</button><button id="btnConfirmAction" class="btn-modal btn-confirm" style="margin-top:0">Confirmar</button>`;
+        document.getElementById('modalText').innerHTML = "Remover este grupo da inscrição?";
+        document.getElementById('modalIcon').innerHTML = '<i class="fa-solid fa-circle-question" style="color:var(--osfic-blue)"></i>';
+        document.getElementById('modalButtons').innerHTML = `<button class="btn-modal btn-back" style="margin-top:0" onclick="closeModal()">Cancelar</button><button id="btnConfirmAction" class="btn-modal btn-confirm" style="margin-top:0">Excluir</button>`;
         modal.style.display = 'flex';
-        document.getElementById('btnConfirmAction').onclick = () => { 
-            listaGrupos = listaGrupos.filter(x => x.id !== id); 
-            renderCards(); 
-            closeModal(); 
-        };
+        document.getElementById('btnConfirmAction').onclick = () => { listaGrupos = listaGrupos.filter(x => x.id !== id); renderCards(); closeModal(); };
     }
     function abrirEditorGrupo() { editandoId = null; alunosTemporarios = []; document.getElementById('catGrupo').value = ""; document.getElementById('qtdAlunos').value = ""; document.getElementById('camposAlunos').innerHTML = ""; document.getElementById('formAtivoGrupo').style.display = 'block'; document.getElementById('triggerAddGrupo').style.display = 'none'; }
     function fecharEditor() { document.getElementById('formAtivoGrupo').style.display = 'none'; document.getElementById('triggerAddGrupo').style.display = 'block'; }
     function gerarResumo() {
-        if (listaGrupos.length === 0) return showAlert("Atenção", "Cadastre ao menos um grupo.", "info");
+        if (listaGrupos.length === 0) return showAlert("Atenção", "Cadastre um grupo.", "info");
         showStep(3);
         const cats = [{ id: 'ponte', nome: 'Ponte de Palitos', bg: '#fefce8' }, { id: 'catapulta', nome: 'Lançador de Projéteis', bg: '#fff7ed' }, { id: 'carrinho', nome: 'Carrinho Elétrico Solar', bg: '#f0fdf4' }];
         let h = `<div class="resumo-section" style="background: #fff;">
