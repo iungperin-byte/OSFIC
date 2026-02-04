@@ -484,7 +484,7 @@
     function abrirEditorGrupo() { editandoId = null; alunosTemporarios = []; document.getElementById('catGrupo').value = ""; document.getElementById('qtdAlunos').value = ""; document.getElementById('camposAlunos').innerHTML = ""; document.getElementById('formAtivoGrupo').style.display = 'block'; document.getElementById('triggerAddGrupo').style.display = 'none'; }
     function fecharEditor() { document.getElementById('formAtivoGrupo').style.display = 'none'; document.getElementById('triggerAddGrupo').style.display = 'block'; }
     function gerarResumo() {
-        if (listaGrupos.length === 0) return showAlert("Atenção", "Cadastre um grupo.", "info");
+        if (listaGrupos.length === 0) return showAlert("Atenção", "Cadastre ao menos um gupo para prosseguir para a Conferência Final.", "info");
         showStep(3);
         const cats = [{ id: 'ponte', nome: 'Ponte de Palitos', bg: '#fefce8' }, { id: 'catapulta', nome: 'Lançador de Projéteis', bg: '#fff7ed' }, { id: 'carrinho', nome: 'Carrinho Elétrico Solar', bg: '#f0fdf4' }];
         let h = `<div class="resumo-section" style="background: #fff;">
