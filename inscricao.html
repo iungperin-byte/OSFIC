@@ -14,10 +14,10 @@
             --osfic-blue: #0ea5e9;
             --bg: #f8fafc; 
             --text: #1e293b; 
-            --error: #dc2626; 
-            --success: #16a34a; 
+            --error: #dc2626; /* Vermelho para erro */
+            --success: #16a34a; /* Verde para sucesso */
             --divider: #e2e8f0; 
-            --footer-bg: #111827; /* bg-gray-900 */
+            --footer-bg: #111827;
         }
 
         body { 
@@ -32,7 +32,7 @@
             min-height: 100vh;
         }
 
-        /* Navbar - Tamanho da Logo Ajustado */
+        /* Navbar */
         .navbar {
             position: fixed;
             top: 0;
@@ -57,10 +57,9 @@
         }
 
         .nav-logo-img {
-            height: 40px; /* Logo Menor */
+            height: 38px;
             width: auto;
             object-fit: contain;
-            transform: scale(1.1); /* Escala reduzida */
         }
 
         .btn-voltar {
@@ -98,17 +97,38 @@
 
         .input-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
         @media (min-width: 600px) { .input-row { flex-direction: row; } .input-row > div { flex: 1; } }
+        
         label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #475569; }
-        input, select { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: 0.3s; background-color: #f8fafc; font-family: 'Poppins', sans-serif; }
+        
+        input, select { 
+            width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; 
+            font-size: 16px; box-sizing: border-box; transition: 0.3s; background-color: #f8fafc; 
+            font-family: 'Poppins', sans-serif; 
+        }
+
+        /* Estilização da setinha do Select (trazendo para dentro) */
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center; 
+            background-size: 1.2em;
+            padding-right: 2.5rem;
+        }
+
         input:focus, select:focus { border-color: var(--primary); outline: none; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1); }
         
         .aluno-box { position: relative; margin-top: 20px; padding: 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; }
         .btn-remove-aluno { position: absolute; top: 12px; right: 12px; color: var(--error); cursor: pointer; font-size: 1.2rem; background: none; border: none; }
+        
+        /* Cores de Validação */
         .text-error { color: var(--error) !important; }
         .text-success { color: var(--success) !important; }
+
         .cpf-wrapper { position: relative; display: flex; align-items: center; }
         .cpf-status-icon { position: absolute; right: 15px; font-size: 1.1rem; }
         .msg-validacao { font-size: 0.75rem; font-weight: bold; margin-top: 5px; display: block; height: 15px; }
+
         .group-card { padding: 20px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background: white; margin-bottom: 10px; transition: 0.2s; }
         .card-actions { display: none; padding: 15px; background: #f1f5f9; border-radius: 0 0 12px 12px; margin-top: -10px; text-align: right; border: 1px solid #e2e8f0; margin-bottom: 25px; justify-content: flex-end; gap: 15px; }
         .resumo-section { padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; }
@@ -127,24 +147,26 @@
         /* Modais */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: none; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(4px); }
         .modal-content { background: white; padding: 30px; border-radius: 20px; max-width: 480px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); animation: modalShow 0.3s ease-out; }
-        @keyframes modalShow { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-icon { font-size: 3.5rem; margin-bottom: 15px; }
-        .modal-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; color: var(--text); }
-        .modal-text { color: #64748b; margin-bottom: 25px; line-height: 1.6; text-align: left; background: #f8fafc; padding: 20px; border-radius: 12px; font-size: 0.95rem; border: 1px solid #e2e8f0; }
-        .modal-buttons { display: flex; gap: 10px; }
-        .btn-modal { padding: 12px; border-radius: 8px; font-weight: bold; flex: 1; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; }
 
-        /* Rodapé Estilo Original */
+        /* Footer Refinado */
         footer {
             background-color: var(--footer-bg);
-            color: #9ca3af; /* text-gray-400 */
-            padding: 30px 0;
+            color: #9ca3af;
+            padding: 25px 0;
             border-top: 1px solid #1f2937;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.7rem; /* Fonte reduzida */
         }
-        .footer-title { color: white; font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
-        .footer-divider { margin: 0 10px; color: #374151; }
+        .footer-title { color: white; font-weight: bold; font-size: 0.95rem; margin-bottom: 8px; }
+        .footer-info-row { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 15px; 
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .footer-divider { color: #4b5563; font-weight: bold; font-size: 1rem; }
         @media (max-width: 768px) { .footer-divider { display: none; } }
     </style>
 </head>
@@ -188,7 +210,7 @@
             <div><label>E-mail:</label><input type="email" id="profEmail" placeholder="exemplo@email.com"></div>
         </div>
         <div class="input-row">
-            <div style="max-width: 300px;">
+            <div>
                 <label>CPF:</label>
                 <div class="cpf-wrapper">
                     <input type="text" id="profCPF" maxlength="14" oninput="mascaraCPF(this)" onkeyup="validarUI(this)" placeholder="000.000.000-00">
@@ -196,6 +218,7 @@
                 </div>
                 <span class="msg-validacao"></span>
             </div>
+            <div class="hidden md:block"></div>
         </div>
         <button class="btn btn-confirm" onclick="validarEAvancar()">Próxima Etapa <i class="fa-solid fa-arrow-right" style="margin-left:8px"></i></button>
     </div>
@@ -239,14 +262,12 @@
 <footer>
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
         <div class="footer-title">Olimpíada Sergipana Fundamental de Inovação e Ciências 2026</div>
-        
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin-bottom: 15px;">
+        <div class="footer-info-row">
             <p>Fomento e Apoio: <strong>FAPITEC/SE & Governo de Sergipe</strong></p>
             <span class="footer-divider">|</span>
             <p>Realização: <strong>CCET | UFS & Clube de Ciências Quarks</strong></p>
         </div>
-        
-        <p>&copy; Desenvolvido pelo Clube de Ciências Quarks.</p>
+        <p style="opacity: 0.7;">&copy; Desenvolvido pelo Clube de Ciências Quarks.</p>
     </div>
 </footer>
 
@@ -264,18 +285,7 @@
         modal.style.display = 'flex';
     }
 
-    function showConfirm(titulo, texto, onConfirm) {
-        const modal = document.getElementById('customModal');
-        document.getElementById('modalTitle').innerText = titulo;
-        document.getElementById('modalText').innerHTML = texto;
-        document.getElementById('modalIcon').innerHTML = '<i class="fa-solid fa-circle-question" style="color:var(--primary)"></i>';
-        document.getElementById('modalButtons').innerHTML = `<button class="btn-modal btn-back" style="margin-top:0" onclick="closeModal()">Cancelar</button><button id="btnConfirmAction" class="btn-modal btn-confirm" style="margin-top:0">Confirmar</button>`;
-        modal.style.display = 'flex';
-        document.getElementById('btnConfirmAction').onclick = () => { onConfirm(); closeModal(); };
-    }
-
     function closeModal() { document.getElementById('customModal').style.display = 'none'; }
-
     function mascaraCPF(i) {
         let v = i.value.replace(/\D/g, "");
         v = v.replace(/(\d{3})(\d)/, "$1.$2");
@@ -283,7 +293,6 @@
         v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
         i.value = v;
     }
-
     function mascaraAno(i) {
         let num = i.value.replace(/\D/g, "");
         if (num === "") { i.value = ""; return; }
@@ -291,7 +300,6 @@
         let pos = num.length;
         i.setSelectionRange(pos, pos);
     }
-
     function isValidCPF(cpf) {
         cpf = (cpf || "").replace(/[^\d]+/g, '');
         if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) return false;
@@ -345,11 +353,11 @@
         if (n > 1) {
             const errosPasso1 = checkPasso1Completo();
             if (errosPasso1.length > 0) {
-                return showAlert("Acesso Negado", "Para acessar as próximas etapas, você precisa primeiro preencher corretamente todos os <b>Dados do Orientador</b> no Passo 1.", "error");
+                return showAlert("Acesso Negado", "Preencha corretamente os <b>Dados do Orientador</b> no Passo 1.", "error");
             }
         }
         if (n === 3 && listaGrupos.length === 0) {
-            return showAlert("Atenção", "Cadastre ao menos um grupo antes de prosseguir para a conferência final.", "info");
+            return showAlert("Atenção", "Cadastre ao menos um grupo antes de prosseguir.", "info");
         }
         document.querySelectorAll('.step').forEach((s, i) => s.style.display = (i+1 === n) ? 'block' : 'none'); 
         document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i+1 === n)); 
@@ -391,7 +399,7 @@
 
     function ajustarQuantidade() {
         const qtd = parseInt(document.getElementById('qtdAlunos').value) || 0;
-        if(qtd > 4) { showAlert("Atenção", "O máximo permitido são 4 alunos por grupo.", "info"); document.getElementById('qtdAlunos').value = 4; return; }
+        if(qtd > 4) { showAlert("Atenção", "Máximo de 4 alunos por grupo.", "info"); document.getElementById('qtdAlunos').value = 4; return; }
         salvarAtuais();
         while(alunosTemporarios.length < qtd) alunosTemporarios.push({ nome: '', cpf: '', serie: '', nivel: '' });
         while(alunosTemporarios.length > qtd) alunosTemporarios.pop();
@@ -411,25 +419,16 @@
         } else {
             alunosTemporarios.forEach((a, i) => {
                 let prefix = `<b>Aluno ${i+1}:</b> `;
-                if (!a.nome.trim()) erros.push(prefix + "Informe o Nome.");
+                if (!a.nome.trim()) erros.push(prefix + "Nome não informado.");
                 if (!isValidCPF(a.cpf)) erros.push(prefix + "CPF inválido.");
-                if (!a.nivel) {
-                    erros.push(prefix + "Selecione o Nível de Ensino.");
-                } else {
+                if (!a.nivel) erros.push(prefix + "Nível de ensino não selecionado.");
+                else {
                     let numSerie = parseInt(a.serie.replace(/\D/g, ""));
-                    if (!numSerie) {
-                        erros.push(prefix + "Informe o Ano/Série.");
-                    } else {
-                        if (a.nivel === "Ensino Fundamental II") {
-                            if (numSerie < 6 || numSerie > 9) erros.push(prefix + "Para o Fundamental II, o ano deve ser <b>6, 7, 8 ou 9</b>.");
-                        } else if (a.nivel === "Ensino Médio") {
-                            if (numSerie < 1 || numSerie > 4) erros.push(prefix + "Para o Ensino Médio, o ano deve ser <b>1, 2, 3 ou 4</b>.");
-                        }
-                    }
+                    if (!numSerie) erros.push(prefix + "Informe o ano/série.");
                 }
             });
         }
-        if (erros.length > 0) showAlert("Ajuste os dados do Grupo", erros.join("<br>"), "error");
+        if (erros.length > 0) showAlert("Ajuste os dados", erros.join("<br>"), "error");
         else {
             const dados = { id: editandoId || Date.now(), categoria: cat, alunos: [...alunosTemporarios] };
             if(editandoId) { const idx = listaGrupos.findIndex(g => g.id === editandoId); listaGrupos[idx] = dados; } else { listaGrupos.push(dados); }
@@ -464,14 +463,23 @@
         renderAlunos();
     }
 
-    function excluirGrupo(id) { showConfirm("Excluir Grupo", "Deseja remover este grupo da sua inscrição?", () => { listaGrupos = listaGrupos.filter(x => x.id !== id); renderCards(); }); }
+    function excluirGrupo(id) { 
+        const modal = document.getElementById('customModal');
+        document.getElementById('modalTitle').innerText = "Excluir Grupo";
+        document.getElementById('modalText').innerHTML = "Deseja remover este grupo?";
+        document.getElementById('modalIcon').innerHTML = '<i class="fa-solid fa-circle-question" style="color:var(--primary)"></i>';
+        document.getElementById('modalButtons').innerHTML = `<button class="btn-modal btn-back" style="margin-top:0" onclick="closeModal()">Cancelar</button><button id="btnConfirmAction" class="btn-modal btn-confirm" style="margin-top:0">Confirmar</button>`;
+        modal.style.display = 'flex';
+        document.getElementById('btnConfirmAction').onclick = () => { 
+            listaGrupos = listaGrupos.filter(x => x.id !== id); 
+            renderCards(); 
+            closeModal(); 
+        };
+    }
     function abrirEditorGrupo() { editandoId = null; alunosTemporarios = []; document.getElementById('catGrupo').value = ""; document.getElementById('qtdAlunos').value = ""; document.getElementById('camposAlunos').innerHTML = ""; document.getElementById('formAtivoGrupo').style.display = 'block'; document.getElementById('triggerAddGrupo').style.display = 'none'; }
     function fecharEditor() { document.getElementById('formAtivoGrupo').style.display = 'none'; document.getElementById('triggerAddGrupo').style.display = 'block'; }
-
     function gerarResumo() {
-        if (listaGrupos.length === 0) {
-            return showAlert("Atenção", "Cadastre ao menos um grupo antes de prosseguir para a conferência final.", "info");
-        }
+        if (listaGrupos.length === 0) return showAlert("Atenção", "Cadastre ao menos um grupo.", "info");
         showStep(3);
         const cats = [{ id: 'ponte', nome: 'Ponte de Palitos', bg: '#fefce8' }, { id: 'catapulta', nome: 'Lançador de Projéteis', bg: '#fff7ed' }, { id: 'carrinho', nome: 'Carrinho Elétrico Solar', bg: '#f0fdf4' }];
         let h = `<div class="resumo-section" style="background: #fff;">
