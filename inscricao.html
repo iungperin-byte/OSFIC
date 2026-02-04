@@ -12,7 +12,7 @@
         
         /* Navegação */
         .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
-        .nav-btn { background: none; border: none; padding: 10px 15px; font-weight: bold; color: #9ca3af; border-radius: 8px; font-size: 0.9rem; }
+        .nav-btn { background: none; border: none; padding: 10px 15px; font-weight: bold; color: #9ca3af; border-radius: 8px; font-size: 0.9rem; cursor: pointer; }
         .nav-btn.active { color: var(--primary); background: #eff6ff; }
 
         /* Cores Categorias */
@@ -42,7 +42,7 @@
         /* Passo 2: Cards e Ações */
         .group-card { padding: 20px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background: white; margin-bottom: 10px; }
         .card-actions { display: none; padding: 15px; background: #f1f5f9; border-radius: 0 0 12px 12px; margin-top: -10px; text-align: right; border: 1px solid #e2e8f0; margin-bottom: 25px; 
-            display: none; justify-content: flex-end; gap: 15px; /* Espaçamento entre os botões Editar/Excluir */
+            justify-content: flex-end; gap: 15px;
         }
 
         /* Passo 3: Resumo */
@@ -50,7 +50,7 @@
         .resumo-header-main { font-weight: bold; color: var(--primary); border-bottom: 2px solid var(--primary); margin-bottom: 15px; padding-bottom: 5px; text-transform: uppercase; }
         .resumo-line { border: 0; border-top: 1px solid var(--divider); margin: 10px 0; }
         
-        .equipe-wrapper { margin-bottom: 30px; } /* Espaço entre cada equipe */
+        .equipe-wrapper { margin-bottom: 30px; }
         .resumo-equipe-title { font-weight: bold; color: #444; display: block; margin-bottom: 15px; font-size: 1rem; }
         
         .student-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
@@ -82,7 +82,10 @@
         </div>
         <div class="input-row">
             <div><label>Nome Completo:</label><input type="text" id="profNome" placeholder="Seu nome" required></div>
-            <div>
+            <div><label>E-mail:</label><input type="email" id="profEmail" placeholder="exemplo@email.com" required></div>
+        </div>
+        <div class="input-row">
+            <div style="max-width: 300px;">
                 <label>CPF:</label>
                 <div class="cpf-wrapper">
                     <input type="text" id="profCPF" maxlength="14" oninput="mascaraCPF(this)" onkeyup="validarUI(this)" placeholder="000.000.000-00" required>
@@ -248,7 +251,7 @@
         container.innerHTML = '';
         const nomesCat = { ponte: 'Ponte de Palitos', catapulta: 'Lançador de Projéteis', carrinho: 'Carrinho Elétrico Solar' };
         listaGrupos.forEach(g => {
-            container.innerHTML += `<div class="card-wrapper"><div class="group-card cat-${g.categoria}" onclick="toggleAcoes(${g.id})"><div><strong>${nomesCat[g.categoria]}</strong><br><small>${g.alunos.map(a => a.nome).join(', ')}</small></div><i class="fa-solid fa-circle-check" style="color:#059669; font-size:1.4rem;"></i></div><div class="card-actions" id="actions-${g.id}" style="display:none; justify-content: flex-end; gap: 15px;"><button class="btn" style="width:auto; background:#e2e8f0; padding:8px 15px;" onclick="prepararEdicao(${g.id})">Editar</button><button class="btn" style="width:auto; background:#fee2e2; color:#dc2626; padding:8px 15px;" onclick="excluirGrupo(${g.id})">Excluir</button></div></div>`;
+            container.innerHTML += `<div class="card-wrapper"><div class="group-card cat-${g.categoria}" onclick="toggleAcoes(${g.id})"><div><strong>${nomesCat[g.categoria]}</strong><br><small>${g.alunos.map(a => a.nome).join(', ')}</small></div><i class="fa-solid fa-circle-check" style="color:#059669; font-size:1.4rem;"></i></div><div class="card-actions" id="actions-${g.id}" style="display:none;"><button class="btn" style="width:auto; background:#e2e8f0; padding:8px 15px;" onclick="prepararEdicao(${g.id})">Editar</button><button class="btn" style="width:auto; background:#fee2e2; color:#dc2626; padding:8px 15px;" onclick="excluirGrupo(${g.id})">Excluir</button></div></div>`;
         });
         document.getElementById('btnIrResumo').style.display = listaGrupos.length > 0 ? 'block' : 'none';
     }
@@ -275,11 +278,33 @@
 
     function fecharEditor() { document.getElementById('formAtivoGrupo').style.display = 'none'; document.getElementById('triggerAddGrupo').style.display = 'block'; }
 
-    function showStep(n) { document.querySelectorAll('.step').forEach((s, i) => s.style.display = (i+1 === n) ? 'block' : 'none'); document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i+1 === n)); }
+    function showStep(n) { 
+        // Bloqueio do Passo 3 se não houver grupos
+        if (n === 3 && listaGrupos.length === 0) {
+            alert("Você precisa adicionar pelo menos um grupo antes de conferir a inscrição.");
+            return;
+        }
+        document.querySelectorAll('.step').forEach((s, i) => s.style.display = (i+1 === n) ? 'block' : 'none'); 
+        document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i+1 === n)); 
+    }
 
-    function validarEAvancar() { if(!document.getElementById('escola').value || !isValidCPF(document.getElementById('profCPF').value)) return alert("Dados do Orientador incompletos!"); showStep(2); }
+    function validarEAvancar() { 
+        const email = document.getElementById('profEmail').value;
+        const emailValido = email.includes('@') && email.includes('.');
+        
+        if(!document.getElementById('escola').value || !isValidCPF(document.getElementById('profCPF').value) || !emailValido) {
+            return alert("Por favor, preencha corretamente todos os dados do Orientador (incluindo um e-mail válido).");
+        }
+        showStep(2); 
+    }
 
     function gerarResumo() {
+        // Verifica novamente se pode ir para o passo 3
+        if (listaGrupos.length === 0) {
+            alert("Adicione pelo menos um grupo primeiro.");
+            return;
+        }
+
         showStep(3);
         const cats = [{ id: 'ponte', nome: 'Ponte de Palitos', bg: '#fefce8' }, { id: 'catapulta', nome: 'Lançador de Projéteis', bg: '#fff7ed' }, { id: 'carrinho', nome: 'Carrinho Elétrico Solar', bg: '#f0fdf4' }];
         let h = `<div class="resumo-section" style="background: #fff;">
@@ -287,6 +312,7 @@
                     <div><strong>Escola:</strong> ${document.getElementById('escola').value}</div><hr class="resumo-line">
                     <div><strong>Disciplina:</strong> ${document.getElementById('profDisc').value}</div><hr class="resumo-line">
                     <div><strong>Nome:</strong> ${document.getElementById('profNome').value}</div><hr class="resumo-line">
+                    <div><strong>E-mail:</strong> ${document.getElementById('profEmail').value}</div><hr class="resumo-line">
                     <div><strong>CPF:</strong> ${document.getElementById('profCPF').value}</div>
                 </div>`;
         
@@ -314,5 +340,4 @@
 </script>
 
 </body>
-          </html>
-          
+</html>
