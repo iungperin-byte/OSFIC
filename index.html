@@ -738,7 +738,7 @@
     	    const navbar = document.getElementById("navbar");
     	    const scrollY = window.scrollY;
 
-    	    const SCROLL_DOWN = 100; // entra no modo compacto
+    	    const SCROLL_DOWN = 60; // entra no modo compacto
     	    const SCROLL_UP   = 40;  // sai do modo compacto (bem antes)
 
     	    if (!lastState && scrollY > SCROLL_DOWN) {
@@ -770,7 +770,7 @@
                 setTimeout(() => {
                     menu.classList.add('hidden');
                     overlay.classList.add('hidden');
-                }, 300);
+                }, 200);
             }
         }
 
@@ -1027,6 +1027,7 @@
     </script>
 </body>
 </html>
+
 
 
 
