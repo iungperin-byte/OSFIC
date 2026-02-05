@@ -1,620 +1,1011 @@
 <!DOCTYPE html>
+
 <html lang="pt-br">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Inscrição - OSFIC 2026</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        'osfic-green': '#16a34a',
-                        'osfic-blue': '#0ea5e9',
-                        'osfic-yellow': '#facc15',
-                        'osfic-dark': '#1e293b',
-                    }
-                }
-            }
-        }
-    </script>
     
+
     <style>
+
         :root { 
+
             --primary: #16a34a; 
+
             --primary-dark: #15803d;
+
             --osfic-blue: #0ea5e9;
+
             --bg: #f8fafc; 
+
             --text: #1e293b; 
+
             --error: #dc2626; 
+
             --success: #16a34a; 
+
             --divider: #e2e8f0; 
+
             --footer-bg: #111827;
+
         }
+
 
         body { 
+
             font-family: 'Poppins', sans-serif; 
+
             background: var(--bg); 
+
             color: var(--text); 
+
             padding: 0; 
+
             margin: 0; 
-            padding-top: 120px; /* Aumente para 120px para dar respiro */
+
+            padding-top: 80px; 
+
             display: flex;
+
             flex-direction: column;
+
             min-height: 100vh;
+
         }
+
 
         /* Navbar */
-        /* --- ESTILOS COMPLEMENTARES DA NAVBAR (VIA INDEX) --- */
-        #navbar { 
-            z-index: 999;
-            transition: padding 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease; 
-        }
-        
-        /* Classe aplicada via JS ao rolar a página */
-        .navbar-scrolled {
-            padding-top: 0.5rem !important;
-            padding-bottom: 0.5rem !important;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        
-        .navbar-scrolled .nav-logo-img {
-            height: 2.5rem !important; /* Reduz a logo ao rolar */
-            transform: scale(0.95);
-            transition: height 0.35s ease, transform 0.35s ease;
-        }
-        
-        .nav-container {
-            transition: padding 0.35s ease;
-        }
-        
-        .navbar-scrolled .nav-container {
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-        }
-        
-        /* --- MENU MOBILE LATERAL --- */
-        #menu-overlay {
-            transition: opacity 0.3s ease;
-        }
-        
-        #mobile-menu {
-            z-index: 2000; /* Garante que fique acima de tudo */
+
+        .navbar {
+
+            position: fixed;
+
+            top: 0;
+
+            width: 100%;
+
+            background: rgba(255, 255, 255, 0.95);
+
+            backdrop-filter: blur(10px);
+
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+            z-index: 1000;
+
+            height: 70px;
+
+            display: flex;
+
+            align-items: center;
+
         }
 
-        .form-container { 
-            max-width: 850px; 
-            margin: 30px auto 60px; 
-            background: white; 
-            padding: 25px; 
-            border-radius: 16px; 
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); 
-            flex-grow: 1;
+
+        .nav-content {
+
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            width: 100%;
+
+            padding: 0 24px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
         }
+
+
+        .nav-logo-img { height: 38px; width: auto; object-fit: contain; }
+
+
+        .btn-voltar {
+
+            text-decoration: none;
+
+            color: #4b5563;
+
+            font-weight: 600;
+
+            font-size: 0.85rem;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            transition: 0.3s;
+
+            padding: 6px 14px;
+
+            border-radius: 99px;
+
+        }
+
+
+        .btn-voltar:hover { background: #f1f5f9; color: var(--primary); }
+
+
+        .container { 
+
+            max-width: 850px; 
+
+            margin: 30px auto 60px; 
+
+            background: white; 
+
+            padding: 25px; 
+
+            border-radius: 16px; 
+
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); 
+
+            flex-grow: 1;
+
+        }
+
         
+
         .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+
         .nav-btn { background: none; border: none; padding: 10px 15px; font-weight: bold; color: #9ca3af; border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-family: 'Poppins', sans-serif; }
+
         .nav-btn.active { color: var(--primary); background: #f0fdf4; }
 
+
         .input-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+
         @media (min-width: 600px) { .input-row { flex-direction: row; } .input-row > div { flex: 1; } }
+
         
+
         label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #475569; }
+
         
+
         input, select { 
+
             width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; 
+
             font-size: 16px; box-sizing: border-box; transition: 0.3s; background-color: #f8fafc; 
+
             font-family: 'Poppins', sans-serif; 
+
         }
+
 
         select {
+
             appearance: none;
+
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+
             background-repeat: no-repeat;
+
             background-position: right 1rem center; 
+
             background-size: 1.1em;
+
             padding-right: 2.5rem;
+
         }
+
 
         input:focus, select:focus { border-color: var(--primary); outline: none; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1); }
+
         
+
         .aluno-box { position: relative; margin-top: 20px; padding: 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; }
+
         .btn-remove-aluno { position: absolute; top: 12px; right: 12px; color: var(--error); cursor: pointer; font-size: 1.2rem; background: none; border: none; }
+
         
+
         .text-error { color: var(--error) !important; }
+
         .text-success { color: var(--success) !important; }
 
+
         .cpf-wrapper { position: relative; display: flex; align-items: center; }
+
         .cpf-status-icon { position: absolute; right: 15px; font-size: 1.1rem; }
+
         .msg-validacao { font-size: 0.75rem; font-weight: bold; margin-top: 5px; display: block; height: 15px; }
 
+
         .group-card { padding: 20px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background: white; margin-bottom: 10px; transition: 0.2s; }
+
         .card-actions { display: none; padding: 15px; background: #f1f5f9; border-radius: 0 0 12px 12px; margin-top: -10px; text-align: right; border: 1px solid #e2e8f0; margin-bottom: 25px; justify-content: flex-end; gap: 15px; }
+
         
+
         .resumo-section { padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; }
+
         .resumo-header-main { font-weight: bold; color: var(--primary); border-bottom: 2px solid var(--primary); margin-bottom: 15px; padding-bottom: 5px; text-transform: uppercase; }
+
         
+
         .btn { padding: 16px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1rem; transition: 0.2s; font-family: 'Poppins', sans-serif; }
+
         .btn-confirm { background: var(--primary); color: white; margin-top: 10px; }
+
         .btn-back { background: #e2e8f0; color: #475569; margin-top: 10px; }
+
         .btn-final { background: var(--success); color: white; margin-top: 25px; }
 
+
         .cat-carrinho { border-left: 10px solid #22c55e !important; background: #f0fdf4; }
+
         .cat-ponte { border-left: 10px solid #eab308 !important; background: #fefce8; }
+
         .cat-catapulta { border-left: 10px solid #78350f !important; background: #fff7ed; }
 
+
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); display: none; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(2px); }
+
         .modal-content { background: white; padding: 35px; border-radius: 16px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.1); animation: modalShow 0.25s ease-out; }
+
         @keyframes modalShow { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
         .modal-icon { font-size: 3rem; margin-bottom: 10px; }
+
         .modal-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 12px; color: var(--text); }
+
         .modal-text { color: #4b5563; margin-bottom: 25px; line-height: 1.5; font-size: 0.95rem; }
+
         .modal-buttons { display: flex; gap: 12px; }
+
         .btn-modal { padding: 12px; border-radius: 8px; font-weight: bold; flex: 1; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; }
 
+
         /* Footer */
+
         footer {
+
             background-color: var(--footer-bg);
+
             color: #9ca3af;
+
             padding: 20px 0;
+
             border-top: 1px solid #1f2937;
+
             text-align: center;
+
             font-size: 0.72rem; 
+
         }
+
         .footer-title { 
+
             color: white; 
+
             font-weight: bold; 
+
             font-size: 0.95rem; 
+
             margin-bottom: 0px;
+
         }
+
         .footer-info-row { 
+
             display: flex; 
+
             justify-content: center; 
+
             align-items: center; 
+
             gap: 15px; 
+
             margin-top: 8px;
+
             flex-wrap: wrap;
+
         }
+
         .footer-info-row p { margin: 0; }
+
         .footer-divider { 
+
             color: #4b5563; 
+
             font-weight: bold; 
+
             font-size: 1rem; 
+
             display: flex;
+
             align-items: center;
+
         }
+
         @media (max-width: 768px) { 
+
             .footer-divider { display: none; } 
+
             .footer-info-row { gap: 4px; flex-direction: column; }
+
         }
+
     </style>
+
 </head>
+
 <body>
 
-<nav class="fixed w-full bg-white/95 backdrop-blur-md shadow-md transition-all duration-300" id="navbar">
-    <div class="nav-container container mx-auto px-6 py-4 flex justify-between items-center transition-all duration-300">
-        <a href="index.html" class="flex items-center gap-2 z-50 text-osfic-green text-3xl">
-            <img src="Logo/osfic_inicial.png" alt="Logo OSFIC" class="nav-logo-img h-14 w-auto object-contain transition-all" style="transform: scale(1.35);">
+
+<nav class="navbar">
+
+    <div class="nav-content">
+
+        <a href="index.html" class="flex items-center">
+
+            <img src="Logo/osfic_inicial.png" alt="Logo OSFIC" class="nav-logo-img">
+
         </a>
-        
-        <div class="hidden lg:flex space-x-6 font-semibold text-gray-600 z-50 items-center text-sm">
-            <a href="index.html#inicio" class="hover:text-osfic-green transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-house"></i> Início</a>
-            <a href="index.html#categorias" class="hover:text-osfic-green transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-list-check"></i> Categorias</a>
-            <a href="index.html#simulacoes" class="hover:text-osfic-blue transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-flask"></i> Regras</a>
-            <a href="index.html#cronograma" class="hover:text-osfic-green transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-calendar-days"></i> Cronograma</a>
-            <a href="index.html#materiais" class="hover:text-osfic-blue transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-book-open"></i> Material</a>
-            <a href="index.html#premiacao" class="hover:text-osfic-yellow transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-trophy"></i> Premiação</a>
-            <a href="#" class="bg-osfic-green text-white px-4 py-2 rounded-full hover:bg-green-700 transition cursor-pointer shadow-md flex items-center gap-2"><i class="fas fa-address-card"></i> Inscrição</a>
-        </div>
-        
-        <button class="lg:hidden text-gray-600 focus:outline-none z-50" onclick="toggleMenu()">
-            <i class="fa-solid fa-bars text-2xl"></i>
-        </button>
+
+        <a href="index.html" class="btn-voltar">
+
+            <i class="fa-solid fa-house"></i> Página Inicial
+
+        </a>
+
     </div>
+
 </nav>
 
-<div id="menu-overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity opacity-0"></div>
-<div id="mobile-menu" class="fixed top-0 right-0 h-full w-72 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 lg:hidden flex flex-col p-6 overflow-y-auto">
-    <div class="flex justify-between items-center mb-8 border-b pb-4">
-        <span class="text-xl font-bold text-osfic-green">Menu</span>
-        <button onclick="toggleMenu()" class="text-gray-500 hover:text-red-500 focus:outline-none"><i class="fa-solid fa-times text-2xl"></i></button>
-    </div>
-    <div class="flex flex-col space-y-6 font-semibold text-gray-600">
-        <a href="index.html#inicio" class="flex items-center gap-3 hover:text-osfic-green transition"><i class="fa-solid fa-house w-6"></i> Início</a>
-        <a href="index.html#categorias" class="flex items-center gap-3 hover:text-osfic-green transition"><i class="fa-solid fa-list-check w-6"></i> Categorias</a>
-        <a href="index.html#simulacoes" class="flex items-center gap-3 hover:text-osfic-blue transition"><i class="fa-solid fa-flask w-6"></i> Regras</a>
-        <a href="index.html#cronograma" class="flex items-center gap-3 hover:text-osfic-green transition"><i class="fa-solid fa-calendar-days w-6"></i> Cronograma</a>
-        <a href="index.html#materiais" class="flex items-center gap-3 hover:text-osfic-blue transition"><i class="fa-solid fa-book-open w-6"></i> Material</a>
-        <a href="index.html#premiacao" class="flex items-center gap-3 hover:text-osfic-yellow transition"><i class="fa-solid fa-trophy w-6"></i> Premiação</a>
-    </div>
-</div>
 
 <div id="customModal" class="modal-overlay">
+
     <div class="modal-content">
+
         <div id="modalIcon" class="modal-icon" style="text-align: center;"></div>
+
         <div id="modalTitle" class="modal-title" style="text-align: center;"></div>
+
         <div id="modalText" class="modal-text"></div>
+
         <div class="modal-buttons" id="modalButtons"></div>
+
     </div>
+
 </div>
 
-<div class="form-container">
+
+<div class="container">
+
     <div class="nav-tabs">
+
         <button class="nav-btn active" id="tab1" onclick="showStep(1)">1. Orientador</button>
+
         <button class="nav-btn" id="tab2" onclick="showStep(2)">2. Grupos</button>
+
         <button class="nav-btn" id="tab3" onclick="gerarResumo()">3. Conferir</button>
+
     </div>
+
 
     <div id="step1" class="step">
+
         <h2 style="color: var(--primary); font-size: 1.5rem;"><i class="fa-solid fa-user-tie" style="margin-right:10px"></i> Dados do Orientador</h2>
+
         <div class="input-row">
+
             <div><label>Escola:</label><select id="escola"><option value="" disabled selected hidden>Selecione a escola...</option><option value="Escola A">Escola A</option><option value="Escola B">Escola B</option></select></div>
+
             <div><label>Disciplina ministrada:</label><input type="text" id="profDisc" placeholder="Ex: Física"></div>
+
         </div>
+
         <div class="input-row">
+
             <div><label>Nome Completo:</label><input type="text" id="profNome" placeholder="Seu nome"></div>
+
             <div><label>E-mail:</label><input type="email" id="profEmail" placeholder="exemplo@email.com"></div>
+
         </div>
+
         <div class="input-row">
+
             <div>
+
                 <label>CPF:</label>
+
                 <div class="cpf-wrapper">
+
                     <input type="text" id="profCPF" maxlength="14" oninput="mascaraCPF(this)" onkeyup="validarUI(this)" placeholder="000.000.000-00">
+
                     <i class="cpf-status-icon"></i>
+
                 </div>
+
                 <span class="msg-validacao"></span>
+
             </div>
+
             <div class="hidden md:block"></div>
+
         </div>
+
         <button class="btn btn-confirm" onclick="validarEAvancar()">Próxima Etapa <i class="fa-solid fa-arrow-right" style="margin-left:8px"></i></button>
+
     </div>
+
 
     <div id="step2" class="step" style="display:none;">
+
         <h2 style="color: var(--primary); font-size: 1.5rem;"><i class="fa-solid fa-users-gear" style="margin-right:10px"></i> Inscrição de Grupos</h2>
+
         <div id="containerCards"></div>
+
         <div id="triggerAddGrupo" onclick="abrirEditorGrupo()" style="border:3px dashed #cbd5e0; padding:40px; text-align:center; border-radius:12px; cursor:pointer; color:var(--primary); font-weight:bold; background: #fcfcfc; transition: 0.3s;">
+
             <i class="fa-solid fa-plus-circle" style="font-size: 1.5rem; margin-bottom: 10px; display: block;"></i> Adicionar Novo Grupo
+
         </div>
+
 
         <div id="formAtivoGrupo" style="display:none; border: 2px solid var(--primary); padding: 25px; border-radius: 12px; margin-top: 15px; background: #fff;">
+
             <h3 id="tituloEditor">Novo Grupo</h3>
+
             <div class="input-row">
+
                 <div>
+
                     <label>Categoria:</label>
+
                     <select id="catGrupo"><option value="" disabled selected hidden>Selecionar categoria</option><option value="ponte">Ponte de Palitos</option><option value="catapulta">Lançador de Projéteis</option><option value="carrinho">Carrinho Elétrico Solar</option></select>
+
                 </div>
+
                 <div><label>Qtd. de Alunos:</label><input type="number" id="qtdAlunos" min="1" max="4" placeholder="4" oninput="ajustarQuantidade()"></div>
+
             </div>
+
             <div id="camposAlunos"></div>
+
             <button id="btnAddAluno" class="btn" style="background:#f0f9ff; color:#0369a1; border:1px dashed #0369a1; display:none; margin-top:10px;" onclick="adicionarUmAluno()">+ Adicionar Aluno</button>
+
             <button class="btn btn-confirm" onclick="confirmarGrupo()">Confirmar Grupo</button>
+
             <button class="btn btn-back" onclick="fecharEditor()">Cancelar</button>
+
         </div>
+
 
         <div style="margin-top:30px; border-top: 1px solid #eee; padding-top: 20px;">
+
             <button id="btnIrResumo" class="btn btn-confirm" style="display:none;" onclick="gerarResumo()">Conferir e finalizar inscrição</button>
+
             <button class="btn btn-back" onclick="showStep(1)">Retornar a etapa anterior</button>
+
         </div>
+
     </div>
+
 
     <div id="step3" class="step" style="display:none;">
+
         <h2 style="color: var(--primary); font-size: 1.5rem;"><i class="fa-solid fa-clipboard-check" style="margin-right:10px"></i> Conferência Final</h2>
+
         <div id="conteudoResumo"></div>
+
         <button class="btn btn-final" onclick="showAlert('Sucesso!', 'Sua inscrição foi registrada. Prepare-se para a OSFIC 2026!', 'success')">Confirmar inscrição</button>
+
         <button class="btn btn-back" onclick="showStep(2)">Voltar e ajustar grupos</button>
+
     </div>
+
 </div>
 
-<footer class="bg-gray-900 text-gray-400 py-8 border-t border-gray-800 text-sm">
-    <div class="container mx-auto px-6 text-center">
-        <div class="flex justify-center mb-2 flex-col items-center">
-            <img src="Logo/osfic_inicial.png" alt="Logo OSFIC" class="h-24 w-auto filter drop-shadow-lg opacity-90 mb-2" style="object-fit: contain;">
-            <h3 class="text-lg font-bold text-white mb-2">Olimpíada Sergipana Fundamental de Inovação e Ciências 2026</h3>
-        </div>
-        
-        <div class="flex flex-col md:flex-row justify-center items-center gap-2 mb-4">
+
+<footer>
+
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+
+        <div class="footer-title">Olimpíada Sergipana Fundamental de Inovação e Ciências 2026</div>
+
+        <div class="footer-info-row">
+
             <p>Fomento e Apoio: <strong>FAPITEC/SE & Governo de Sergipe</strong></p>
-            <span class="hidden md:block mx-2 text-gray-600">|</span>
+
+            <span class="footer-divider">|</span>
+
             <p>Realização: <strong>CCET | UFS & Clube de Ciências Quarks</strong></p>
+
         </div>
-        
-        <p>&copy; Desenvolvido pelo Clube de Ciências Quarks.</p>
+
+        <p style="opacity: 0.7; margin-top: 10px;">&copy; Desenvolvido pelo Clube de Ciências Quarks.</p>
+
     </div>
+
 </footer>
+
 
 <script>
 
-    // --- LÓGICA DE SCROLL (NAVBAR COMPACTA) ---
-    let lastState = false;
-    
-    window.addEventListener("scroll", () => {
-        const navbar = document.getElementById("navbar");
-        const scrollY = window.scrollY;
-    
-        const SCROLL_DOWN = 60; // Distância para compactar
-        const SCROLL_UP   = 40;  // Distância para expandir
-    
-        if (!lastState && scrollY > SCROLL_DOWN) {
-            navbar.classList.add("navbar-scrolled");
-            lastState = true;
-        }
-    
-        if (lastState && scrollY < SCROLL_UP) {
-            navbar.classList.remove("navbar-scrolled");
-            lastState = false;
-        }
-    });
-    
-    // --- LÓGICA DO MENU MOBILE (DRAWER) ---
-    function toggleMenu() {
-        const menu = document.getElementById('mobile-menu');
-        const overlay = document.getElementById('menu-overlay');
-        
-        if (menu.classList.contains('translate-x-full')) {
-            menu.classList.remove('hidden'); 
-            overlay.classList.remove('hidden');
-            setTimeout(() => {
-                menu.classList.remove('translate-x-full');
-                overlay.classList.remove('opacity-0');
-            }, 10);
-        } else {
-            menu.classList.add('translate-x-full');
-            overlay.classList.add('opacity-0');
-            setTimeout(() => {
-                menu.classList.add('hidden');
-                overlay.classList.add('hidden');
-            }, 200);
-        }
-    }
-    
     let listaGrupos = [];
+
     let alunosTemporarios = [];
+
     let editandoId = null;
 
+
     function showAlert(titulo, texto, tipo = 'info') {
+
         const modal = document.getElementById('customModal');
+
         document.getElementById('modalTitle').innerText = titulo;
+
         document.getElementById('modalText').innerHTML = texto;
+
         document.getElementById('modalIcon').innerHTML = tipo === 'success' ? '<i class="fa-solid fa-circle-check" style="color:var(--success)"></i>' : (tipo === 'error' ? '<i class="fa-solid fa-circle-xmark" style="color:var(--error)"></i>' : '<i class="fa-solid fa-circle-info" style="color:var(--osfic-blue)"></i>');
+
         document.getElementById('modalButtons').innerHTML = `<button class="btn-modal btn-confirm" onclick="closeModal()">Entendido</button>`;
+
         modal.style.display = 'flex';
+
     }
+
 
     function closeModal() { document.getElementById('customModal').style.display = 'none'; }
+
     
+
     function mascaraCPF(i) {
+
         let v = i.value.replace(/\D/g, "");
+
         v = v.replace(/(\d{3})(\d)/, "$1.$2");
+
         v = v.replace(/(\d{3})(\d)/, "$1.$2");
+
         v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
         i.value = v;
+
     }
+
 
     function mascaraAno(i) {
+
         let num = i.value.replace(/\D/g, "");
+
         if (num === "") { i.value = ""; return; }
+
         i.value = num + "° ano";
+
         let pos = num.length;
+
         i.setSelectionRange(pos, pos);
+
     }
+
 
     function isValidCPF(cpf) {
+
         cpf = (cpf || "").replace(/[^\d]+/g, '');
+
         if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) return false;
+
         let s=0, r;
+
         for (let i=1; i<=9; i++) s += parseInt(cpf.substring(i-1, i)) * (11-i);
+
         r = (s*10)%11; if (r==10 || r==11) r=0;
+
         if (r != parseInt(cpf.substring(9, 10))) return false;
+
         s=0;
+
         for (let i=1; i<=10; i++) s += parseInt(cpf.substring(i-1, i)) * (12-i);
+
         r = (s*10)%11; if (r==10 || r==11) r=0;
+
         return r == parseInt(cpf.substring(10, 11));
+
     }
+
 
     function validarUI(input) {
+
         const icon = input.parentElement.querySelector('.cpf-status-icon');
+
         const msg = input.parentElement.parentElement.querySelector('.msg-validacao');
+
         if (input.value.length === 14) {
+
             if (isValidCPF(input.value)) {
+
                 icon.className = "cpf-status-icon fa-solid fa-circle-check text-success";
+
                 msg.innerText = "CPF válido!"; 
+
                 msg.className = "msg-validacao text-success";
+
             } else {
+
                 icon.className = "cpf-status-icon fa-solid fa-circle-xmark text-error";
+
                 msg.innerText = "CPF inválido!"; 
+
                 msg.className = "msg-validacao text-error";
+
             }
+
         } else {
+
             icon.className = "cpf-status-icon"; 
+
             msg.innerText = "";
+
             msg.className = "msg-validacao";
+
         }
+
     }
+
 
     function checkPasso1Completo() {
+
         let erros = [];
+
         if (!document.getElementById('escola').value) erros.push("• Escola não selecionada.");
+
         if (!document.getElementById('profDisc').value.trim()) erros.push("• Disciplina não informada.");
+
         if (!document.getElementById('profNome').value.trim()) erros.push("• Nome do orientador não informado.");
+
         if (!document.getElementById('profEmail').value.match(/\S+@\S+\.\S+/)) erros.push("• E-mail inválido.");
+
         if (!isValidCPF(document.getElementById('profCPF').value)) erros.push("• CPF do orientador inválido.");
+
         return erros;
+
     }
+
 
     function validarEAvancar() {
+
         const erros = checkPasso1Completo();
+
         if (erros.length > 0) showAlert("Atenção", erros.join("<br>"), "error");
+
         else showStep(2);
+
     }
+
 
     function showStep(n) { 
+
         if (n > 1) {
+
             const errosPasso1 = checkPasso1Completo();
+
             if (errosPasso1.length > 0) {
+
                 // Alterado de 'Acesso Negado/error' para 'Atenção/info' conforme solicitado
+
                 return showAlert("Atenção", "Complete os <b>Dados do Orientador</b> no Passo 1 para prosseguir.", "info");
+
             }
+
         }
+
         if (n === 3 && listaGrupos.length === 0) {
+
             return showAlert("Atenção", "Cadastre ao menos um grupo antes de prosseguir.", "info");
+
         }
+
         document.querySelectorAll('.step').forEach((s, i) => s.style.display = (i+1 === n) ? 'block' : 'none'); 
+
         document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i+1 === n)); 
+
     }
+
 
     function renderAlunos() {
+
         const container = document.getElementById('camposAlunos');
+
         container.innerHTML = '';
+
         alunosTemporarios.forEach((aluno, i) => {
+
             container.innerHTML += `
+
                 <div class="aluno-box">
+
                     <button class="btn-remove-aluno" onclick="removerAluno(${i})">✕</button>
+
                     <label>Dados do Aluno ${i+1}</label>
+
                     <input type="text" placeholder="Nome Completo" class="nome-aluno" value="${aluno.nome}" style="margin-bottom:10px;">
+
                     <div class="input-row">
+
                         <div><select class="nivel-aluno"><option value="" disabled selected hidden>Nível de Ensino</option><option value="Ensino Fundamental II" ${aluno.nivel === 'Ensino Fundamental II' ? 'selected' : ''}>Ensino Fundamental II</option><option value="Ensino Médio" ${aluno.nivel === 'Ensino Médio' ? 'selected' : ''}>Ensino Médio</option></select></div>
+
                         <div><input type="text" placeholder="Ano / Série" class="serie-aluno" value="${aluno.serie || ''}" oninput="mascaraAno(this)"></div>
+
                     </div>
+
                     <div class="cpf-wrapper">
+
                         <input type="text" placeholder="CPF do Aluno" class="cpf-aluno" maxlength="14" oninput="mascaraCPF(this)" onkeyup="validarUI(this)" value="${aluno.cpf}">
+
                         <i class="cpf-status-icon"></i>
+
                     </div>
+
                     <span class="msg-validacao"></span>
+
                 </div>`;
+
         });
+
         document.getElementById('btnAddAluno').style.display = (alunosTemporarios.length < 4) ? 'block' : 'none';
+
     }
+
 
     function salvarAtuais() {
+
         const nomes = document.querySelectorAll('.nome-aluno');
+
         const cpfs = document.querySelectorAll('.cpf-aluno');
+
         const series = document.querySelectorAll('.serie-aluno');
+
         const niveis = document.querySelectorAll('.nivel-aluno');
+
         alunosTemporarios = [];
+
         nomes.forEach((n, i) => { 
+
             alunosTemporarios.push({ nome: n.value, cpf: cpfs[i].value, serie: series[i].value, nivel: niveis[i].value }); 
+
         });
+
     }
+
 
     function ajustarQuantidade() {
+
         const qtd = parseInt(document.getElementById('qtdAlunos').value) || 0;
+
         if(qtd > 4) { showAlert("Atenção", "Máximo de 4 alunos por grupo.", "info"); document.getElementById('qtdAlunos').value = 4; return; }
+
         salvarAtuais();
+
         while(alunosTemporarios.length < qtd) alunosTemporarios.push({ nome: '', cpf: '', serie: '', nivel: '' });
+
         while(alunosTemporarios.length > qtd) alunosTemporarios.pop();
+
         renderAlunos();
+
     }
+
 
     function adicionarUmAluno() { if(alunosTemporarios.length < 4) { salvarAtuais(); alunosTemporarios.push({ nome: '', cpf: '', serie: '', nivel: '' }); renderAlunos(); document.getElementById('qtdAlunos').value = alunosTemporarios.length; } }
+
     function removerAluno(idx) { salvarAtuais(); alunosTemporarios.splice(idx, 1); renderAlunos(); document.getElementById('qtdAlunos').value = alunosTemporarios.length; }
 
+
     function confirmarGrupo() {
+
         salvarAtuais();
+
         let erros = [];
+
         const cat = document.getElementById('catGrupo').value;
+
         if (!cat) erros.push("• Escolha uma <b>Categoria</b>.");
+
         if (alunosTemporarios.length === 0) erros.push("• Adicione ao menos um aluno.");
+
         else {
+
             alunosTemporarios.forEach((a, i) => {
+
                 let prefix = `<b>Aluno ${i+1}:</b> `;
+
                 if (!a.nome.trim()) erros.push(prefix + "Nome não informado.");
+
                 if (!isValidCPF(a.cpf)) erros.push(prefix + "CPF inválido.");
+
                 if (!a.nivel) erros.push(prefix + "Selecione o Nível.");
+
                 else {
+
                     let numSerie = parseInt(a.serie.replace(/\D/g, ""));
+
                     if (!numSerie) erros.push(prefix + "Informe o Ano/Série.");
+
                 }
+
             });
+
         }
+
         if (erros.length > 0) showAlert("Ajuste os dados", erros.join("<br>"), "error");
+
         else {
+
             const dados = { id: editandoId || Date.now(), categoria: cat, alunos: [...alunosTemporarios] };
+
             if(editandoId) { const idx = listaGrupos.findIndex(g => g.id === editandoId); listaGrupos[idx] = dados; } else { listaGrupos.push(dados); }
+
             renderCards(); fecharEditor();
+
         }
+
     }
+
 
     function renderCards() {
+
         const container = document.getElementById('containerCards');
+
         container.innerHTML = '';
+
         const nomesCat = { ponte: 'Ponte de Palitos', catapulta: 'Lançador de Projéteis', carrinho: 'Carrinho Elétrico Solar' };
+
         listaGrupos.forEach(g => {
+
             container.innerHTML += `<div class="card-wrapper"><div class="group-card cat-${g.categoria}" onclick="toggleAcoes(${g.id})"><div><strong>${nomesCat[g.categoria]}</strong><br><small>${g.alunos.map(a => a.nome).join(', ')}</small></div><i class="fa-solid fa-circle-check" style="color:#16a34a; font-size:1.4rem;"></i></div><div class="card-actions" id="actions-${g.id}" style="display:none;"><button class="btn" style="width:auto; background:#e2e8f0; padding:8px 15px;" onclick="prepararEdicao(${g.id})">Editar</button><button class="btn" style="width:auto; background:#fee2e2; color:#dc2626; padding:8px 15px;" onclick="excluirGrupo(${g.id})">Excluir</button></div></div>`;
+
         });
+
         document.getElementById('btnIrResumo').style.display = listaGrupos.length > 0 ? 'block' : 'none';
+
     }
+
 
     function toggleAcoes(id) {
+
         const div = document.getElementById(`actions-${id}`);
+
         const status = div.style.display === 'flex';
+
         document.querySelectorAll('.card-actions').forEach(d => d.style.display = 'none');
+
         div.style.display = status ? 'none' : 'flex';
+
     }
+
 
     function prepararEdicao(id) {
+
         const g = listaGrupos.find(x => x.id === id);
+
         editandoId = id; alunosTemporarios = [...g.alunos];
+
         document.getElementById('catGrupo').value = g.categoria;
+
         document.getElementById('qtdAlunos').value = g.alunos.length;
+
         document.getElementById('formAtivoGrupo').style.display = 'block';
+
         document.getElementById('triggerAddGrupo').style.display = 'none';
+
         renderAlunos();
+
     }
+
 
     function excluirGrupo(id) { 
+
         const modal = document.getElementById('customModal');
+
         document.getElementById('modalTitle').innerText = "Excluir Grupo";
+
         document.getElementById('modalText').innerHTML = "Remover este grupo da inscrição?";
+
         document.getElementById('modalIcon').innerHTML = '<i class="fa-solid fa-circle-question" style="color:var(--osfic-blue)"></i>';
+
         document.getElementById('modalButtons').innerHTML = `<button class="btn-modal btn-back" style="margin-top:0" onclick="closeModal()">Cancelar</button><button id="btnConfirmAction" class="btn-modal btn-confirm" style="margin-top:0">Excluir</button>`;
+
         modal.style.display = 'flex';
+
         document.getElementById('btnConfirmAction').onclick = () => { listaGrupos = listaGrupos.filter(x => x.id !== id); renderCards(); closeModal(); };
+
     }
+
 
     function abrirEditorGrupo() { editandoId = null; alunosTemporarios = []; document.getElementById('catGrupo').value = ""; document.getElementById('qtdAlunos').value = ""; document.getElementById('camposAlunos').innerHTML = ""; document.getElementById('formAtivoGrupo').style.display = 'block'; document.getElementById('triggerAddGrupo').style.display = 'none'; }
+
     function fecharEditor() { document.getElementById('formAtivoGrupo').style.display = 'none'; document.getElementById('triggerAddGrupo').style.display = 'block'; }
+
     
+
     function gerarResumo() {
+
         if (listaGrupos.length === 0) return showAlert("Atenção", "Cadastre ao menos um grupo para prosseguir para a Conferência Final.", "info");
+
         showStep(3);
+
         const cats = [{ id: 'ponte', nome: 'Ponte de Palitos', bg: '#fefce8' }, { id: 'catapulta', nome: 'Lançador de Projéteis', bg: '#fff7ed' }, { id: 'carrinho', nome: 'Carrinho Elétrico Solar', bg: '#f0fdf4' }];
+
         let h = `<div class="resumo-section" style="background: #fff;">
+
                     <div class="resumo-header-main">Dados do Orientador</div>
+
                     <div><strong>Escola:</strong> ${document.getElementById('escola').value}</div><hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
+
                     <div><strong>Disciplina:</strong> ${document.getElementById('profDisc').value}</div><hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
+
                     <div><strong>Nome:</strong> ${document.getElementById('profNome').value}</div><hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
+
                     <div><strong>E-mail:</strong> ${document.getElementById('profEmail').value}</div><hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
+
                     <div><strong>CPF:</strong> ${document.getElementById('profCPF').value}</div>
+
                 </div>`;
+
         cats.forEach(c => {
+
             const gruposFiltrados = listaGrupos.filter(g => g.categoria === c.id);
+
             if(gruposFiltrados.length > 0) {
+
                 h += `<div class="resumo-section" style="background: ${c.bg};"><div class="resumo-header-main">Grupos: ${c.nome}</div>`;
+
                 gruposFiltrados.forEach((g, idx) => {
+
                     h += `<div style="margin-bottom:20px;">
+
                             <span style="font-weight:bold; color:#444; display:block; margin-bottom:10px;">Equipe ${idx + 1}</span>
+
                             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+
                                 ${g.alunos.map(a => `<div style="background:white; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
+
                                         <strong style="color:var(--primary)">${a.nome}</strong><br>
+
                                         <small>CPF: ${a.cpf}</small><br>
+
                                         <small>${a.nivel} - ${a.serie}</small>
+
                                     </div>`).join('')}
+
                             </div>
+
                           </div>`;
+
                 });
+
                 h += `</div>`;
+
             }
+
         });
+
         document.getElementById('conteudoResumo').innerHTML = h;
+
     }
+
 </script>
 
+
 </body>
+
 </html>
