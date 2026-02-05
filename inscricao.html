@@ -6,6 +6,25 @@
     <title>Inscrição - OSFIC 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'osfic-green': '#16a34a',
+                        'osfic-blue': '#0ea5e9',
+                        'osfic-yellow': '#facc15',
+                        'osfic-dark': '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
     
     <style>
         :root { 
@@ -26,7 +45,7 @@
             color: var(--text); 
             padding: 0; 
             margin: 0; 
-            padding-top: 100px;
+            padding-top: 120px; /* Aumente para 120px para dar respiro */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -70,7 +89,7 @@
             z-index: 2000; /* Garante que fique acima de tudo */
         }
 
-        .container { 
+        form-container { 
             max-width: 850px; 
             margin: 30px auto 60px; 
             background: white; 
@@ -226,7 +245,7 @@
     </div>
 </div>
 
-<div class="container">
+<div class="form-container">
     <div class="nav-tabs">
         <button class="nav-btn active" id="tab1" onclick="showStep(1)">1. Orientador</button>
         <button class="nav-btn" id="tab2" onclick="showStep(2)">2. Grupos</button>
