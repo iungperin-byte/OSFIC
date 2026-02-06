@@ -112,6 +112,7 @@
         }
 
         .container-form select {
+            min-width: 25rem;
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
@@ -132,7 +133,7 @@
         .cpf-status-icon { position: absolute; right: 15px; font-size: 1.1rem; }
         .msg-validacao { font-size: 0.75rem; font-weight: bold; margin-top: 5px; display: block; height: 15px; }
 
-        .group-card { padding: 20px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background: white; margin-bottom: 10px; transition: 0.2s; }
+        .group-card { padding: 20px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background: white; margin-bottom: 10px; argin-top: 15px; transition: 0.2s; }
         .card-actions { display: none; padding: 15px; background: #f1f5f9; border-radius: 0 0 12px 12px; margin-top: -10px; text-align: right; border: 1px solid #e2e8f0; margin-bottom: 25px; justify-content: flex-end; gap: 15px; }
         
         .resumo-section { padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; }
@@ -213,7 +214,7 @@
         </div>
 
         <div id="step1" class="step">
-            <h2 style="color: var(--primary); font-size: 1.5rem;"><i class="fa-solid fa-user-tie" style="margin-right:10px"></i> Dados do Orientador</h2>
+            <h2 style="color: var(--primary); font-size: 1.5rem;"><i class="fa-solid fa-user-tie" style="margin-right:10px; margin-bottom: 10px;"></i> Dados do Orientador</h2>
             <div class="input-row">
                 <div><label>Escola:</label><select id="escola"><option value="" disabled selected hidden>Selecione a escola...</option><option value="Escola A">Escola A</option><option value="Escola B">Escola B</option></select></div>
                 <div><label>Disciplina ministrada:</label><input type="text" id="profDisc" placeholder="Ex: Física"></div>
@@ -237,9 +238,9 @@
         </div>
 
         <div id="step2" class="step" style="display:none;">
-            <h2 style="color: var(--primary); font-size: 1.5rem;"><i class="fa-solid fa-users-gear" style="margin-right:10px"></i> Inscrição de Grupos</h2>
+            <h2 style="color: var(--primary); font-size: 1.5rem; margin-bottom: 15px;"><i class="fa-solid fa-users-gear" style="margin-right:10px"></i> Inscrição de Grupos</h2>
             <div id="containerCards"></div>
-            <div id="triggerAddGrupo" onclick="abrirEditorGrupo()" style="border:3px dashed #cbd5e0; padding:40px; text-align:center; border-radius:12px; cursor:pointer; color:var(--primary); font-weight:bold; background: #fcfcfc; transition: 0.3s;">
+            <div id="triggerAddGrupo" onclick="abrirEditorGrupo()" style="margin: 25px 0; border:3px dashed #cbd5e0; padding:40px; text-align:center; border-radius:12px; cursor:pointer; color:var(--primary); font-weight:bold; background: #fcfcfc; transition: 0.3s;">
                 <i class="fa-solid fa-plus-circle" style="font-size: 1.5rem; margin-bottom: 10px; display: block;"></i> Adicionar Novo Grupo
             </div>
 
@@ -265,7 +266,7 @@
         </div>
 
         <div id="step3" class="step" style="display:none;">
-            <h2 style="color: var(--primary); font-size: 1.5rem;"><i class="fa-solid fa-clipboard-check" style="margin-right:10px"></i> Conferência Final</h2>
+            <h2 style="margin-bottom: 10px; color: var(--primary); font-size: 1.5rem;"><i class="fa-solid fa-clipboard-check" style="margin-right:10px"></i> Conferência Final</h2>
             <div id="conteudoResumo"></div>
             <button class="btn-form btn-final" onclick="showAlert('Sucesso!', 'Sua inscrição foi registrada. Prepare-se para a OSFIC 2026!', 'success')">Confirmar inscrição</button>
             <button class="btn-form btn-back" onclick="showStep(2)">Voltar e ajustar grupos</button>
