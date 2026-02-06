@@ -165,10 +165,12 @@
 <body class="bg-gray-50 text-gray-800 font-sans antialiased overflow-x-hidden">
 
     <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-md transition-all duration-300 z-[1100]" id="navbar">
-        <div class="nav-container container mx-auto px-6 py-4 flex justify-between items-center transition-all duration-300">
+        <div class="nav-container container mx-auto px-6 py-4 flex justify-between items-center transition-all duration-300 relative">
             <a href="index.html" class="flex items-center gap-2 z-50 text-osfic-green text-3xl">
                 <img src="Logo/osfic_inicial.png" alt="Logo OSFIC" class="nav-logo-img h-14 w-auto object-contain transition-all" style="transform: scale(1.35);">
             </a>
+
+            <div class="hidden lg:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-xl text-gray-700 pointer-events-none">Formulário de Inscrições</div>
             
             <div class="hidden lg:flex space-x-6 font-semibold text-gray-600 z-50 items-center text-sm">
                 <a href="index.html" class="bg-osfic-blue text-white px-5 py-2 rounded-full hover:bg-sky-600 transition cursor-pointer shadow-md flex items-center gap-2">
