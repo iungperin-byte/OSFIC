@@ -174,9 +174,32 @@
         .btn-modal { padding: 12px; border-radius: 8px; font-weight: bold; flex: 1; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; }
         /* --- CSS ORIGINAL DO FORMULÁRIO (FIM) --- */
         
-        /* Animação da Barra de Progresso */
-        #progress-bar {
-            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Animação de Rotação Personalizada */
+        @keyframes spin-slow {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* O anel que gira */
+        .loader-ring {
+            /* Tamanho um pouco maior que a logo */
+            width: 120px;
+            height: 120px;
+            /* Borda base cinza claro */
+            border: 4px solid #e2e8f0;
+            /* Borda superior colorida (Verde OSFIC) que dá o efeito de giro */
+            border-top-color: #16a34a; 
+            border-radius: 50%;
+            /* Aplica a animação */
+            animation: spin-slow 1.2s linear infinite;
+            position: absolute; /* Para ficar atrás/em volta da logo */
+        }
+        
+        /* A logo pulsando no centro */
+        .loader-logo {
+            height: 80px; /* Altura da logo */
+            width: auto;
+            position: relative;
+            z-index: 10; /* Garante que a logo fique na frente do anel */
         }
     </style>
 </head>
@@ -696,33 +719,25 @@
         }
 
         function irParaInicio(event) {
-            event.preventDefault(); // Impede o link de carregar imediatamente
+            event.preventDefault();
             
             const overlay = document.getElementById('transition-overlay');
-            const bar = document.getElementById('progress-bar');
             
-            // 1. Torna o overlay visível e interativo
+            // 1. Torna o overlay visível
             overlay.classList.remove('opacity-0', 'pointer-events-none');
             
-            // 2. Inicia a animação da barra (dá um delay minúsculo para o CSS pegar)
-            setTimeout(() => {
-                bar.style.width = "100%";
-            }, 50);
-        
-            // 3. Redireciona após a animação (1.2 segundos)
+            // 2. Espera 1.5 segundos (tempo da animação) e redireciona
             setTimeout(() => {
                 window.location.href = "index.html";
-            }, 1200);
+            }, 1500);
         }
     </script>
-    <div id="transition-overlay" class="fixed inset-0 bg-white z-[2000] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
-        <img src="Logo/osfic_inicial.png" alt="Carregando..." class="h-24 mb-8 animate-pulse">
-        
-        <div class="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
-            <div id="progress-bar" class="h-full bg-osfic-green w-0 rounded-full"></div>
+    <div id="transition-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-sm z-[2000] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
+        <div class="relative flex items-center justify-center mb-8">
+            <div class="loader-ring"></div>
+            <img src="Logo/osfic_inicial.png" alt="Carregando..." class="loader-logo animate-pulse">
         </div>
-        
-        <p class="text-osfic-dark mt-4 font-semibold text-sm animate-pulse">Retornando ao início...</p>
+        <p class="text-osfic-dark font-semibold text-sm animate-pulse">Retornando ao início...</p>
     </div>
 </body>
 </html>
