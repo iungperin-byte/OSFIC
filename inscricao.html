@@ -99,7 +99,7 @@
         .nav-btn.active { color: var(--primary); background: #f0fdf4; }
 
         .input-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
-        @media (min-width: 600px) { .input-row { flex-direction: row; } .input-row > div { flex: 1; } }
+        @media (min-width: 600px) { .input-row { flex-direction: row; } .input-row > div { flex: 1; min-width: 0; } }
         
         label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #475569; }
         
@@ -199,7 +199,7 @@
         </div>
 
         <div id="step1" class="step">
-            <h2 style="color: var(--primary); font-size: 1.5rem;"><i class="fa-solid fa-user-tie" style="margin-right:10px; margin-bottom: 10px;"></i> Dados do Orientador</h2>
+            <h2 style="color: var(--primary); font-size: 1.5rem; margin-bottom: 25px;"><i class="fa-solid fa-user-tie" style="margin-right:10px; margin-bottom: 10px;"></i> Dados do Orientador</h2>
             <div class="input-row">
                 <div>
                     <label>Escola:</label>
@@ -241,7 +241,7 @@
         </div>
 
         <div id="step2" class="step" style="display:none;">
-            <h2 style="color: var(--primary); font-size: 1.5rem; margin-bottom: 15px;"><i class="fa-solid fa-users-gear" style="margin-right:10px"></i> Inscrição de Grupos</h2>
+            <h2 style="color: var(--primary); font-size: 1.5rem; margin-bottom: 25px;"><i class="fa-solid fa-users-gear" style="margin-right:10px"></i> Inscrição de Grupos</h2>
             <div id="containerCards"></div>
             <div id="triggerAddGrupo" onclick="abrirEditorGrupo()" style="margin: 25px 0; border:3px dashed #cbd5e0; padding:40px; text-align:center; border-radius:12px; cursor:pointer; color:var(--primary); font-weight:bold; background: #fcfcfc; transition: 0.3s;">
                 <i class="fa-solid fa-plus-circle" style="font-size: 1.5rem; margin-bottom: 10px; display: block;"></i> Adicionar Novo Grupo
@@ -269,7 +269,7 @@
         </div>
 
         <div id="step3" class="step" style="display:none;">
-            <h2 style="margin-bottom: 10px; color: var(--primary); font-size: 1.5rem;"><i class="fa-solid fa-clipboard-check" style="margin-right:10px"></i> Conferência Final</h2>
+            <h2 style="margin-bottom: 10px; color: var(--primary); font-size: 1.5rem; margin-bottom: 25px;"><i class="fa-solid fa-clipboard-check" style="margin-right:10px"></i> Conferência Final</h2>
             <div id="conteudoResumo"></div>
             <button class="btn-form btn-final" onclick="showAlert('Sucesso!', 'Sua inscrição foi registrada. Prepare-se para a OSFIC 2026!', 'success')">Confirmar inscrição</button>
             <button class="btn-form btn-back" onclick="showStep(2)">Voltar e ajustar grupos</button>
