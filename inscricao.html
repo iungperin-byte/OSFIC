@@ -731,6 +731,16 @@
                 window.location.href = "index.html";
             }, 1500);
         }
+        // CORREÇÃO DO BOTÃO VOLTAR (BFCACHE)
+        window.addEventListener('pageshow', function(event) {
+            // Pega o overlay
+            const overlay = document.getElementById('transition-overlay');
+            
+            // Se o overlay existir, forçamos ele a sumir imediatamente
+            if (overlay) {
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+        });
     </script>
     <div id="transition-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-sm z-[2000] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
         <div class="relative flex items-center justify-center mb-12">
