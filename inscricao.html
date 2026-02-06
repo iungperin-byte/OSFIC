@@ -533,67 +533,63 @@
         function removerAluno(idx) { salvarAtuais(); alunosTemporarios.splice(idx, 1); renderAlunos(); document.getElementById('qtdAlunos').value = alunosTemporarios.length; }
 
         function confirmarGrupo() {
-            salvarAtuais();
-            let erros = [];
-            const cat = document.getElementById('catGrupo').value;
-            const profCPF = document.getElementById('profCPF').value; // Pega CPF do Orientador
-            
-            if (!cat) erros.push("• Escolha uma <b>Categoria</b>.");
-            if (alunosTemporarios.length === 0) erros.push("• Adicione ao menos um aluno.");
-            else {
-                // Verifica duplicidades internas no array antes de salvar
-                const cpfsDoGrupo = alunosTemporarios.map(a => a.cpf);
-                // Filtra CPFs preenchidos e verifica duplicata
-                const temDuplicataInterna = cpfsDoGrupo.some((val, i) => cpfsDoGrupo.indexOf(val) !== i && val.length === 14);
-        
-                if (temDuplicataInterna) {
-                    erros.push("• Existem <b>CPFs duplicados</b> entre os alunos.");
-                }
-        
-                alunosTemporarios.forEach((a, i) => {
-                    let prefix = `<b>Aluno ${i+1}:</b> `;
-                    if (!a.nome.trim()) erros.push(prefix + "Nome não informado.");
-                    
-                    // Validações de CPF
-                    if (!isValidCPF(a.cpf)) {
-                        erros.push(prefix + "CPF inválido.");
-                    } else {
-                        // Validação Bloqueadora: Igual ao Orientador
-                        if (a.cpf === profCPF) {
-                            erros.push(prefix + "CPF não pode ser igual ao do Orientador.");
-                        }
-                    }
-        
-                    if (!a.nivel) erros.push(prefix + "Selecione o Nível.");
-                    else {
-                        let numSerie = parseInt(a.serie.replace(/\D/g, ""));
-                    
-                        if (!numSerie) {
-                            erros.push(prefix + "Informe o Ano/Série.");
-                        } else {
-                            // --- NOVA REGRA: VALIDAÇÃO DE SÉRIE POR NÍVEL ---
-                            if (a.nivel === 'Ensino Fundamental II') {
-                                // Aceita apenas 6, 7, 8 ou 9
-                                if (numSerie < 6 || numSerie > 9) {
-                                    erros.push(prefix + "Para Fundamental II, o ano deve ser 6, 7, 8 ou 9.");
-                                }
-                            } 
-                            else if (a.nivel === 'Ensino Médio') {
-                                // Aceita apenas 1, 2, 3 ou 4
-                                if (numSerie < 1 || numSerie > 4) {
-                                    erros.push(prefix + "Para Ensino Médio, a série deve ser 1, 2, 3 ou 4.");
-                                }
-                            }
-                        }
-                    }
-            
-            if (erros.length > 0) showAlert("Ajuste os dados", erros.join("<br>"), "error");
-            else {
-                const dados = { id: editandoId || Date.now(), categoria: cat, alunos: [...alunosTemporarios] };
-                if(editandoId) { const idx = listaGrupos.findIndex(g => g.id === editandoId); listaGrupos[idx] = dados; } else { listaGrupos.push(dados); }
-                renderCards(); fecharEditor();
-            }
+    salvarAtuais();
+    let erros = [];
+    const cat = document.getElementById('catGrupo').value;
+    const profCPF = document.getElementById('profCPF').value;
+    
+    if (!cat) erros.push("• Escolha uma <b>Categoria</b>.");
+    if (alunosTemporarios.length === 0) erros.push("• Adicione ao menos um aluno.");
+    else {
+        // Verifica duplicidades internas
+        const cpfsDoGrupo = alunosTemporarios.map(a => a.cpf);
+        const temDuplicataInterna = cpfsDoGrupo.some((val, i) => cpfsDoGrupo.indexOf(val) !== i && val.length === 14);
+
+        if (temDuplicataInterna) {
+            erros.push("• Existem <b>CPFs duplicados</b> entre os alunos.");
         }
+
+        alunosTemporarios.forEach((a, i) => {
+            let prefix = `<b>Aluno ${i+1}:</b> `;
+            if (!a.nome.trim()) erros.push(prefix + "Nome não informado.");
+            
+            // Valida CPF
+            if (!isValidCPF(a.cpf)) {
+                erros.push(prefix + "CPF inválido.");
+            } else if (a.cpf === profCPF) {
+                erros.push(prefix + "CPF não pode ser igual ao do Orientador.");
+            }
+
+            // --- AQUI ESTÁ A NOVA REGRA DE NÍVEL/SÉRIE ---
+            if (!a.nivel) erros.push(prefix + "Selecione o Nível.");
+            else {
+                let numSerie = parseInt(a.serie.replace(/\D/g, ""));
+
+                if (!numSerie) {
+                    erros.push(prefix + "Informe o Ano/Série.");
+                } else {
+                    if (a.nivel === 'Ensino Fundamental II') {
+                        if (numSerie < 6 || numSerie > 9) {
+                            erros.push(prefix + "Para Fundamental II, o ano deve ser 6, 7, 8 ou 9.");
+                        }
+                    } 
+                    else if (a.nivel === 'Ensino Médio') {
+                        if (numSerie < 1 || numSerie > 4) {
+                            erros.push(prefix + "Para Ensino Médio, a série deve ser 1, 2, 3 ou 4.");
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    if (erros.length > 0) showAlert("Ajuste os dados", erros.join("<br>"), "error");
+    else {
+        const dados = { id: editandoId || Date.now(), categoria: cat, alunos: [...alunosTemporarios] };
+        if(editandoId) { const idx = listaGrupos.findIndex(g => g.id === editandoId); listaGrupos[idx] = dados; } else { listaGrupos.push(dados); }
+        renderCards(); fecharEditor();
+    }
+}
 
         function renderCards() {
             const container = document.getElementById('containerCards');
