@@ -567,10 +567,25 @@
                     if (!a.nivel) erros.push(prefix + "Selecione o Nível.");
                     else {
                         let numSerie = parseInt(a.serie.replace(/\D/g, ""));
-                        if (!numSerie) erros.push(prefix + "Informe o Ano/Série.");
+                    
+                        if (!numSerie) {
+                            erros.push(prefix + "Informe o Ano/Série.");
+                        } else {
+                            // --- NOVA REGRA: VALIDAÇÃO DE SÉRIE POR NÍVEL ---
+                            if (a.nivel === 'Ensino Fundamental II') {
+                                // Aceita apenas 6, 7, 8 ou 9
+                                if (numSerie < 6 || numSerie > 9) {
+                                    erros.push(prefix + "Para Fundamental II, o ano deve ser 6, 7, 8 ou 9.");
+                                }
+                            } 
+                            else if (a.nivel === 'Ensino Médio') {
+                                // Aceita apenas 1, 2, 3 ou 4
+                                if (numSerie < 1 || numSerie > 4) {
+                                    erros.push(prefix + "Para Ensino Médio, a série deve ser 1, 2, 3 ou 4.");
+                                }
+                            }
+                        }
                     }
-                });
-            }
             
             if (erros.length > 0) showAlert("Ajuste os dados", erros.join("<br>"), "error");
             else {
