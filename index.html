@@ -247,6 +247,26 @@
              padding-top: 0.5rem !important;
              font-size: 0.8rem !important;
         }
+		
+		/* --- CSS DA TRANSIÇÃO (SPINNER) --- */
+		@keyframes spin-slow {
+		    to { transform: rotate(360deg); }
+		}
+		.loader-ring {
+		    width: 180px;
+		    height: 180px;
+		    border: 6px solid #e2e8f0;
+		    border-top-color: #16a34a; 
+		    border-radius: 50%;
+		    animation: spin-slow 1.2s linear infinite;
+		    position: absolute; 
+		}
+		.loader-logo {
+		    height: 80px;
+		    width: auto;
+		    position: relative;
+		    z-index: 10;
+		}
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans antialiased overflow-x-hidden">
@@ -267,8 +287,8 @@
                 <a href="#cronograma" class="hover:text-osfic-green transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-calendar-days"></i> Cronograma</a>
                 <a href="#materiais" class="hover:text-osfic-blue transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-book-open"></i> Material</a>
                 <a href="#premiacao" class="hover:text-osfic-yellow transition cursor-pointer flex items-center gap-2"><i class="fa-solid fa-trophy"></i> Premiação</a>
-                <a href="inscricao.html" class="bg-osfic-green text-white px-4 py-2 rounded-full hover:bg-green-700 transition cursor-pointer shadow-md flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Inscreva-se</a>
-            </div>
+                <a href="inscricao.html" onclick="irParaInscricao(event)" class="bg-osfic-green text-white px-4 py-2 rounded-full hover:bg-green-700 transition cursor-pointer shadow-md flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Inscreva-se
+</a>            </div>
             
             <!-- Mobile Menu Button -->
             <button class="lg:hidden text-gray-600 focus:outline-none z-50" onclick="toggleMenu()">
@@ -293,7 +313,7 @@
             <a href="#cronograma" class="flex items-center gap-3 hover:text-osfic-green transition" onclick="toggleMenu()"><i class="fa-solid fa-calendar-days w-6"></i> Cronograma</a>
             <a href="#materiais" class="flex items-center gap-3 hover:text-osfic-blue transition" onclick="toggleMenu()"><i class="fa-solid fa-book-open w-6"></i> Material</a>
             <a href="#premiacao" class="flex items-center gap-3 hover:text-osfic-yellow transition" onclick="toggleMenu()"><i class="fa-solid fa-trophy w-6"></i> Premiação</a>
-            <a href="inscricao.html" class="bg-osfic-green text-white px-4 py-3 rounded-xl hover:bg-green-700 transition shadow-md flex items-center justify-center gap-2 mt-4" onclick="toggleMenu()"><i class="fa-solid fa-pen-to-square"></i> Inscreva-se Agora</a>
+            <a href="inscricao.html" onclick="toggleMenu(); irParaInscricao(event)" class="bg-osfic-green text-white px-4 py-3 rounded-xl hover:bg-green-700 transition shadow-md flex items-center justify-center gap-2 mt-4"><i class="fa-solid fa-pen-to-square"></i> Inscreva-se Agora</a>
         </div>
     </div>
 
@@ -348,9 +368,9 @@
     <!-- Botões CTA -->
     <section class="bg-white py-8 pb-12 shadow-sm relative z-20 border-b border-gray-200">
         <div class="container mx-auto px-6 flex flex-col md:flex-row justify-center gap-6">
-            <a href="inscricao.html" class="bg-osfic-green text-white px-8 py-4 rounded-full font-bold shadow-lg hover:bg-green-700 hover:shadow-xl transition transform hover:-translate-y-1 flex items-center justify-center gap-3 text-lg">
-                <i class="fa-solid fa-users"></i> Inscrever Participantes
-            </a>
+            <a href="inscricao.html" onclick="irParaInscricao(event)" class="bg-osfic-green text-white px-8 py-4 rounded-full font-bold shadow-lg hover:bg-green-700 hover:shadow-xl transition transform hover:-translate-y-1 flex items-center justify-center gap-3 text-lg">
+			    <i class="fa-solid fa-users"></i> Inscrever Participantes
+			</a>
             <a href="#materiais" class="bg-white text-osfic-dark border-2 border-gray-200 px-8 py-4 rounded-full font-bold shadow-md hover:border-osfic-blue hover:text-osfic-blue transition flex items-center justify-center gap-3 text-lg">
                 <i class="fa-solid fa-book-open"></i> Ver Material Didático
             </a>
@@ -690,9 +710,9 @@
         <div class="container mx-auto px-6 text-center">
             <div class="max-w-3xl mx-auto bg-green-50 rounded-3xl p-10 border border-green-100 shadow-xl">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Pronto para o Desafio?</h2>
-                <a href="inscricao.html" class="inline-block bg-osfic-green text-white text-xl font-bold px-10 py-5 rounded-full shadow-lg hover:bg-green-700 hover:shadow-2xl transition transform hover:-translate-y-1">
-                    <i class="fas fa-address-card"></i> Inscrever Participantes
-                </a>
+                <a href="inscricao.html" onclick="irParaInscricao(event)" class="inline-block bg-osfic-green text-white text-xl font-bold px-10 py-5 rounded-full shadow-lg hover:bg-green-700 hover:shadow-2xl transition transform hover:-translate-y-1">
+				    <i class="fas fa-address-card"></i> Inscrever Participantes
+				</a>
             </div>
         </div>
     </section>
@@ -1024,9 +1044,32 @@
             }, 100);
         }
         window.addEventListener('load', runCarSim);
+
+		function irParaInscricao(event) {
+		    event.preventDefault(); // Impede o clique imediato
+		    
+		    const overlay = document.getElementById('transition-overlay');
+		    
+		    // Mostra a tela
+		    overlay.classList.remove('opacity-0', 'pointer-events-none');
+		    
+		    // Aguarda e redireciona para a página de inscrição
+		    setTimeout(() => {
+		        window.location.href = "inscricao.html";
+		    }, 1500);
+		}
+		
     </script>
+	<div id="transition-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-sm z-[2000] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
+	    <div class="relative flex items-center justify-center mb-8">
+	        <div class="loader-ring"></div>
+	        <img src="Logo/osfic_final.png" alt="Carregando..." class="loader-logo animate-pulse">
+	    </div>
+	    <p class="text-osfic-dark font-semibold text-sm animate-pulse mt-6">Carregando formulário de inscrição...</p>
+	</div>
 </body>
 </html>
+
 
 
 
