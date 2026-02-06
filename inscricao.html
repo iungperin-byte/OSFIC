@@ -165,40 +165,23 @@
 <body class="bg-gray-50 text-gray-800 font-sans antialiased overflow-x-hidden">
 
     <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-md transition-all duration-300 z-[1100]" id="navbar">
-        <div class="nav-container container mx-auto px-6 py-4 flex justify-between items-center transition-all duration-300 relative">
-            <a href="index.html" class="flex items-center gap-2 z-50 text-osfic-green text-3xl">
-                <img src="Logo/osfic_inicial.png" alt="Logo OSFIC" class="nav-logo-img h-14 w-auto object-contain transition-all" style="transform: scale(1.35);">
-            </a>
-
-            <div class="hidden lg:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-xl text-gray-700 pointer-events-none">Formulário de Inscrições</div>
-            
-            <div class="hidden lg:flex space-x-6 font-semibold text-gray-600 z-50 items-center text-sm">
-                <a href="index.html" class="bg-osfic-blue text-white px-5 py-2 rounded-full hover:bg-sky-600 transition cursor-pointer shadow-md flex items-center gap-2">
-                    <i class="fa-solid fa-house"></i> Página Inicial
-                </a>
-            </div>
-            
-            <button class="lg:hidden text-gray-600 focus:outline-none z-50" onclick="toggleMenu()">
-                <i class="fa-solid fa-bars text-2xl"></i>
-            </button>
+    <div class="nav-container container mx-auto px-6 py-4 flex justify-between items-center transition-all duration-300 relative">
+        
+        <a href="index.html" class="flex items-center gap-2 z-50 text-osfic-green text-3xl">
+            <img src="Logo/osfic_inicial.png" alt="Logo OSFIC" class="nav-logo-img h-14 w-auto object-contain transition-all" style="transform: scale(1.35);">
+        </a>
+        
+        <div class="hidden lg:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-xl text-gray-700 pointer-events-none">
+            Formulário de Inscrições
         </div>
-    </nav>
-
-    <div id="menu-overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/50 z-[1050] hidden lg:hidden transition-opacity opacity-0"></div>
-
-    <div id="mobile-menu" class="fixed top-0 right-0 h-full w-72 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-[1150] lg:hidden flex flex-col p-6 overflow-y-auto">
-        <div class="flex justify-between items-center mb-8 border-b pb-4">
-            <span class="text-xl font-bold text-osfic-green">Menu</span>
-            <button onclick="toggleMenu()" class="text-gray-500 hover:text-red-500 focus:outline-none"><i class="fa-solid fa-times text-2xl"></i></button>
-        </div>
-        <div class="flex flex-col space-y-6 font-semibold text-gray-600">
-            <a href="index.html" class="bg-osfic-blue text-white px-4 py-3 rounded-xl hover:bg-sky-600 transition shadow-md flex items-center justify-center gap-2 mt-4">
-                <i class="fa-solid fa-house"></i> Página Inicial
+        
+        <div class="flex space-x-6 font-semibold text-gray-600 z-50 items-center text-sm">
+            <a href="index.html" class="bg-osfic-blue text-white px-4 py-2 rounded-full hover:bg-sky-600 transition cursor-pointer shadow-md flex items-center gap-2 text-xs md:text-sm">
+                <i class="fa-solid fa-house"></i> Início
             </a>
         </div>
     </div>
-
-
+</nav>
     <div id="customModal" class="modal-overlay">
         <div class="modal-content">
             <div id="modalIcon" class="modal-icon" style="text-align: center;"></div>
@@ -218,14 +201,33 @@
         <div id="step1" class="step">
             <h2 style="color: var(--primary); font-size: 1.5rem;"><i class="fa-solid fa-user-tie" style="margin-right:10px; margin-bottom: 10px;"></i> Dados do Orientador</h2>
             <div class="input-row">
-                <div><label>Escola:</label><select id="escola"><option value="" disabled selected hidden>Selecione a escola...</option><option value="EMEFJK">Escola Municipal de Ensino Fundamental Juscelino Kubitschek - EMEFJK</option><option value="CEGAF">Centro de Excelência Governador Augusto Franco - CEGAF</option><option value="EMPLAB">Escola Municipal Professor Luiz Antônio Barreto - EMPLAB</option><option value="CEMG">Centro de Excelência Miguel das Graças - CEMG</option></select></div>
-                <div><label>Disciplina ministrada:</label><input type="text" id="profDisc" placeholder="Ex: Física"></div>
+                <div>
+                    <label>Escola:</label>
+                    <select id="escola">
+                        <option value="" disabled selected hidden>Selecione a escola...</option>
+                        <option value="EMEFJK">Escola Municipal de Ensino Fundamental Juscelino Kubitschek - EMEFJK (Aracaju)</option>
+                        <option value="CEGAF">Centro de Excelência Governador Augusto Franco - CEGAF (Aracaju)</option>
+                        <option value="EMPLAB">Escola Municipal Professor Luiz Antônio Barreto - EMPLAB (Aracaju)</option>
+                        <option value="CEMG">Centro de Excelência Miguel das Graças - CEMG (Aracaju)</option>
+                    </select>
+                </div>
             </div>
             <div class="input-row">
-                <div><label>Nome Completo:</label><input type="text" id="profNome" placeholder="Seu nome"></div>
-                <div><label>E-mail:</label><input type="email" id="profEmail" placeholder="exemplo@email.com"></div>
+                <div>
+                    <label>Disciplina ministrada:</label>
+                    <input type="text" id="profDisc" placeholder="Ex: Física">
+                </div>
+                <div>
+                    <label>Nome Completo:</label>
+                    <input type="text" id="profNome" placeholder="Seu nome">
+                </div>
             </div>
+        
             <div class="input-row">
+                <div>
+                    <label>E-mail:</label>
+                    <input type="email" id="profEmail" placeholder="exemplo@email.com">
+                </div>
                 <div>
                     <label>CPF:</label>
                     <div class="cpf-wrapper">
@@ -234,7 +236,6 @@
                     </div>
                     <span class="msg-validacao"></span>
                 </div>
-                <div class="hidden md:block"></div>
             </div>
             <button class="btn-form btn-confirm" onclick="validarEAvancar()">Próxima Etapa <i class="fa-solid fa-arrow-right" style="margin-left:8px"></i></button>
         </div>
@@ -275,11 +276,11 @@
         </div>
     </div>
 
-    <footer class="bg-gray-900 text-gray-400 py-2 border-t border-gray-800 text-sm mt-auto">
-        <div class="container mx-auto px-6 text-center">
-        <div class="flex justify-center mb-2" style="flex-direction: column;">
-                <img src="Logo/osfic_inicial.png" alt="Logo OSFIC Informativa" class="h-24 w-auto filter drop-shadow-lg opacity-90 hover:opacity-100 transition mx-auto" style="object-fit: contain;">
-        <h3 class="text-lg font-bold text-white mb-2">Olimpíada Sergipana Fundamental de Inovação e Ciências 2026</h3>
+    <footer class="w-full bg-gray-900 text-gray-400 py-4 border-t border-gray-800 text-sm mt-auto">
+        <div class="w-full px-6 text-center">
+            <div class="flex justify-center mb-2 flex-col">
+                <img src="Logo/osfic_inicial.png" alt="Logo OSFIC Informativa" class="h-24 w-auto filter drop-shadow-lg opacity-90 hover:opacity-100 transition mx-auto object-contain">
+                <h3 class="text-lg font-bold text-white mb-2 mt-2">Olimpíada Sergipana Fundamental de Inovação e Ciências 2026</h3>
             </div>
             
             <div class="flex flex-col md:flex-row justify-center items-center gap-2 mb-4">
