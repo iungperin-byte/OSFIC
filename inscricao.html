@@ -276,9 +276,9 @@
                 <button class="btn-form btn-back" onclick="fecharEditor()">Cancelar</button>
             </div>
 
-            <div style="margin-top:30px; border-top: 1px solid #eee; padding-top: 20px;">
-                <button id="btnIrResumo" class="btn-form btn-confirm" style="display:none;" onclick="gerarResumo()">Conferir e finalizar inscrição</button>
-                <button class="btn-form btn-back" onclick="showStep(1)">Retornar a etapa anterior</button>
+            <div id="botoesNavegacaoStep2" style="margin-top:30px; border-top: 1px solid #eee; padding-top: 20px;">
+                <button id="btnIrResumo" class="btn-form btn-confirm" style="display:none;" onclick="gerarResumo()">Conferir dados de inscrição</button>
+                <button class="btn-form btn-back" onclick="showStep(1)">Retornar para etapa anterior</button>
             </div>
         </div>
 
@@ -599,11 +599,17 @@
 
         function prepararEdicao(id) {
             const g = listaGrupos.find(x => x.id === id);
-            editandoId = id; alunosTemporarios = [...g.alunos];
+            editandoId = id; 
+            alunosTemporarios = [...g.alunos];
             document.getElementById('catGrupo').value = g.categoria;
             document.getElementById('qtdAlunos').value = g.alunos.length;
+            
             document.getElementById('formAtivoGrupo').style.display = 'block';
             document.getElementById('triggerAddGrupo').style.display = 'none';
+            
+            // LINHA NOVA: Esconde os botões de navegação
+            document.getElementById('botoesNavegacaoStep2').style.display = 'none';
+            
             renderAlunos();
         }
 
@@ -617,8 +623,27 @@
             document.getElementById('btnConfirmAction').onclick = () => { listaGrupos = listaGrupos.filter(x => x.id !== id); renderCards(); closeModal(); };
         }
 
-        function abrirEditorGrupo() { editandoId = null; alunosTemporarios = []; document.getElementById('catGrupo').value = ""; document.getElementById('qtdAlunos').value = ""; document.getElementById('camposAlunos').innerHTML = ""; document.getElementById('formAtivoGrupo').style.display = 'block'; document.getElementById('triggerAddGrupo').style.display = 'none'; }
-        function fecharEditor() { document.getElementById('formAtivoGrupo').style.display = 'none'; document.getElementById('triggerAddGrupo').style.display = 'block'; }
+        function abrirEditorGrupo() { 
+            editandoId = null; 
+            alunosTemporarios = []; 
+            document.getElementById('catGrupo').value = ""; 
+            document.getElementById('qtdAlunos').value = ""; 
+            document.getElementById('camposAlunos').innerHTML = ""; 
+            
+            document.getElementById('formAtivoGrupo').style.display = 'block'; 
+            document.getElementById('triggerAddGrupo').style.display = 'none'; 
+            
+            // LINHA NOVA: Esconde os botões de navegação
+            document.getElementById('botoesNavegacaoStep2').style.display = 'none';
+        }
+        
+        function fecharEditor() { 
+            document.getElementById('formAtivoGrupo').style.display = 'none'; 
+            document.getElementById('triggerAddGrupo').style.display = 'block'; 
+            
+            // LINHA NOVA: Mostra os botões de navegação novamente
+            document.getElementById('botoesNavegacaoStep2').style.display = 'block';
+        }
         
         function gerarResumo() {
             if (listaGrupos.length === 0) return showAlert("Atenção", "Cadastre ao menos um grupo para prosseguir para a Conferência Final.", "info");
