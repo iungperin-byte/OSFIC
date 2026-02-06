@@ -82,14 +82,14 @@
 
         /* Container do Formulário */
         .container-form { 
-            max-width: 850px; 
+            width: 90%; /* Adicionado: Garante que ocupe 90% da tela no mobile */
+            max-width: 850px; /* Mantém o limite no desktop */
             margin: 30px auto 60px; 
             background: white; 
             padding: 25px; 
             border-radius: 16px; 
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); 
             flex-grow: 1;
-            /* Reset básico para garantir que o tailwind não atrapalhe os inputs */
             position: relative;
             z-index: 10;
         }
@@ -162,7 +162,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 font-sans antialiased overflow-x-hidden">
+<body class="bg-gray-50 text-gray-800 font-sans antialiased overflow-x-hidden w-full">
 
     <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-md transition-all duration-300 z-[1100]" id="navbar">
     <div class="nav-container container mx-auto px-6 py-4 flex justify-between items-center transition-all duration-300 relative">
@@ -175,8 +175,8 @@
             Formulário de Inscrições
         </div>
         
-        <div class="flex space-x-6 font-semibold text-gray-600 z-50 items-center text-sm">
-            <a href="index.html" class="bg-osfic-blue text-white px-4 py-2 rounded-full hover:bg-sky-600 transition cursor-pointer shadow-md flex items-center gap-2 text-xs md:text-sm">
+        <div class="flex space-x-6 z-50 items-center">
+            <a href="index.html" class="bg-osfic-blue text-white px-6 py-3 rounded-full hover:bg-sky-600 transition cursor-pointer shadow-md flex items-center gap-2 text-base font-bold">
                 <i class="fa-solid fa-house"></i> Início
             </a>
         </div>
@@ -207,8 +207,8 @@
                         <option value="" disabled selected hidden>Selecione a escola...</option>
                         <option value="EMEFJK">Escola Municipal de Ensino Fundamental Juscelino Kubitschek - EMEFJK (Aracaju)</option>
                         <option value="CEGAF">Centro de Excelência Governador Augusto Franco - CEGAF (Aracaju)</option>
-                        <option value="EMPLAB">Escola Municipal Professor Luiz Antônio Barreto - EMPLAB (Aracaju)</option>
-                        <option value="CEMG">Centro de Excelência Miguel das Graças - CEMG (Aracaju)</option>
+                        <option value="EMPLAB">Escola Municipal Professor Luiz Antônio Barreto - EMPLAB (Riachão do Dantas)</option>
+                        <option value="CEMG">Centro de Excelência Miguel das Graças - CEMG (São Miguel do Aleixo)</option>
                     </select>
                 </div>
             </div>
