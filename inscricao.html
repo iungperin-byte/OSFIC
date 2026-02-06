@@ -173,6 +173,11 @@
         .modal-buttons { display: flex; gap: 12px; }
         .btn-modal { padding: 12px; border-radius: 8px; font-weight: bold; flex: 1; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; }
         /* --- CSS ORIGINAL DO FORMULÁRIO (FIM) --- */
+        
+        /* Animação da Barra de Progresso */
+        #progress-bar {
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
     </style>
 </head>
 
@@ -190,7 +195,7 @@
             </div>
             
             <div class="flex space-x-6 z-50 items-center">
-                <a href="index.html" class="nav-btn-home bg-osfic-blue text-white px-6 py-3 rounded-full hover:bg-sky-600 transition-all duration-300 cursor-pointer shadow-md flex items-center gap-2 text-base font-bold">
+                <a href="index.html" onclick="irParaInicio(event)" class="bg-osfic-blue text-white px-6 py-3 rounded-full hover:bg-sky-600 transition-all duration-300 cursor-pointer shadow-md flex items-center gap-2 text-base font-bold nav-btn-home">
                     <i class="fa-solid fa-house"></i> Início
                 </a>
             </div>
@@ -278,7 +283,7 @@
 
             <div id="botoesNavegacaoStep2" style="margin-top:30px; border-top: 1px solid #eee; padding-top: 20px;">
                 <button id="btnIrResumo" class="btn-form btn-confirm" style="display:none;" onclick="gerarResumo()">Conferir dados de inscrição</button>
-                <button class="btn-form btn-back" onclick="showStep(1)">Retornar para etapa anterior</button>
+                <button class="btn-form btn-back" onclick="showStep(1)">Retornar para a etapa anterior</button>
             </div>
         </div>
 
@@ -689,6 +694,35 @@
             });
             document.getElementById('conteudoResumo').innerHTML = h;
         }
+
+        function irParaInicio(event) {
+            event.preventDefault(); // Impede o link de carregar imediatamente
+            
+            const overlay = document.getElementById('transition-overlay');
+            const bar = document.getElementById('progress-bar');
+            
+            // 1. Torna o overlay visível e interativo
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            
+            // 2. Inicia a animação da barra (dá um delay minúsculo para o CSS pegar)
+            setTimeout(() => {
+                bar.style.width = "100%";
+            }, 50);
+        
+            // 3. Redireciona após a animação (1.2 segundos)
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 1200);
+        }
     </script>
+    <div id="transition-overlay" class="fixed inset-0 bg-white z-[2000] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
+        <img src="Logo/osfic_inicial.png" alt="Carregando..." class="h-24 mb-8 animate-pulse">
+        
+        <div class="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
+            <div id="progress-bar" class="h-full bg-osfic-green w-0 rounded-full"></div>
+        </div>
+        
+        <p class="text-osfic-dark mt-4 font-semibold text-sm animate-pulse">Retornando ao início...</p>
+    </div>
 </body>
 </html>
