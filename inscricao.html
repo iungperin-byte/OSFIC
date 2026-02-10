@@ -270,6 +270,19 @@
                     <label>E-mail:</label>
                     <input type="email" id="profEmail" placeholder="exemplo@email.com">
                 </div>
+                <div class="input-row">
+                    <div>
+                        <label>WhatsApp:</label>
+                        <div class="cpf-wrapper">
+                            <input type="tel" id="profZap" maxlength="15" oninput="mascaraZap(this)" placeholder="(79) 9 0000-0000">
+                            <i class="fa-brands fa-whatsapp cpf-status-icon" style="color: #25D366;"></i>
+                        </div>
+                        <small style="color: #64748b; font-size: 0.75rem; margin-top: 5px; display: block; line-height: 1.4;">
+                            <i class="fa-solid fa-circle-info" style="color: var(--osfic-blue); margin-right: 3px;"></i>
+                            A organização criará um grupo para dinamizar a comunicação.
+                        </small>
+                    </div>
+                </div>
                 <div>
                     <label>CPF:</label>
                     <div class="cpf-wrapper">
@@ -392,6 +405,13 @@
 
         function closeModal() { document.getElementById('customModal').style.display = 'none'; }
         
+        function mascaraZap(i) {
+            let v = i.value.replace(/\D/g, "");
+            v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+            v = v.replace(/(\d)(\d{4})$/, "$1-$2");
+            i.value = v;
+        }
+        
         function mascaraCPF(i) {
             let v = i.value.replace(/\D/g, "");
             v = v.replace(/(\d{3})(\d)/, "$1.$2");
@@ -491,6 +511,7 @@
             if (!document.getElementById('profNome').value.trim()) erros.push("• Nome do orientador não informado.");
             if (!document.getElementById('profEmail').value.match(/\S+@\S+\.\S+/)) erros.push("• E-mail inválido.");
             if (!isValidCPF(document.getElementById('profCPF').value)) erros.push("• CPF do orientador inválido.");
+            if (document.getElementById('profZap').value.length < 14) erros.push("• WhatsApp inválido ou incompleto.");
             return erros;
         }
 
