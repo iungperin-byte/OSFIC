@@ -80,6 +80,68 @@ try {
     }
 
     $pdo->commit();
+    // --- 4. ENVIO DE E-MAILS (CONFIRMAÇÃO) ---
+    // CONFIGURAÇÃO: Coloque aqui o e-mail da organização que receberá os avisos
+    $emailOrganizacao = 'contato@seusite.com.br'; 
+    
+    // CONFIGURAÇÃO: Este e-mail DEVE existir na sua hospedagem (ex: nao-responda@seusite.com.br)
+    // Se você usar um e-mail que não é do seu domínio (como @gmail), pode cair no spam.
+    $emailRemetente = 'nao-responda@seusite.com.br'; 
+
+    // --- Montando o E-mail para o Orientador ---
+    $assuntoOrientador = "Confirmação de Inscrição - OSFIC 2026";
+    
+    // Mensagem em HTML
+    $msgOrientador = "
+    <html>
+    <head><title>Confirmação de Inscrição</title></head>
+    <body style='font-family: Arial, sans-serif;'>
+        <h2 style='color: #0284c7;'>Olá, " . $dados['orientador']['nome'] . "!</h2>
+        <p>Recebemos sua inscrição/atualização com sucesso para a <b>OSFIC 2026</b>.</p>
+        <p><b>Escola:</b> " . $dados['orientador']['escola'] . "<br>
+        <b>Protocolo/ID:</b> " . $orientadorId . "</p>
+        <hr>
+        <h3>Grupos Cadastrados:</h3>
+        <ul>";
+        
+    foreach ($dados['grupos'] as $g) {
+        $msgOrientador .= "<li><b>Categoria:</b> " . ucfirst($g['categoria']) . " (" . count($g['alunos']) . " alunos)</li>";
+    }
+
+    $msgOrientador .= "
+        </ul>
+        <hr>
+        <p style='font-size: 12px; color: #666;'>Este é um e-mail automático, por favor não responda.</p>
+    </body>
+    </html>
+    ";
+
+    // --- Montando o E-mail para a Organização ---
+    $assuntoOrg = "Nova Inscrição: " . $dados['orientador']['nome'];
+    $msgOrg = "
+    <html>
+    <body>
+        <h3>Nova atividade no sistema OSFIC</h3>
+        <p><b>Orientador:</b> " . $dados['orientador']['nome'] . "<br>
+        <b>Escola:</b> " . $dados['orientador']['escola'] . "<br>
+        <b>WhatsApp:</b> " . $dados['orientador']['whatsapp'] . "<br>
+        <b>Ação:</b> " . (!empty($dados['id_orientador']) ? 'Atualização de Cadastro' : 'Novo Cadastro') . "</p>
+    </body>
+    </html>
+    ";
+
+    // --- Cabeçalhos (Headers) para aceitar HTML e definir o Remetente ---
+    $headers  = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
+    $headers .= "From: OSFIC <$emailRemetente>" . "\r\n";
+    $headers .= "Reply-To: $emailRemetente" . "\r\n";
+    $headers .= "X-Mailer: PHP/" . phpversion();
+
+    // --- Envia os dois e-mails ---
+    // O '@' na frente serve para evitar mostrar erros na tela se o servidor de e-mail falhar momentaneamente
+    @mail($dados['orientador']['email'], $assuntoOrientador, $msgOrientador, $headers);
+    @mail($emailOrganizacao, $assuntoOrg, $msgOrg, $headers);
+    
     echo json_encode(['sucesso' => true, 'protocolo' => $orientadorId, 'modo' => !empty($dados['id_orientador']) ? 'atualizacao' : 'criacao']);
 
 } catch (Exception $e) {
