@@ -326,7 +326,7 @@
         <div id="step3" class="step" style="display:none;">
             <h2 style="margin-bottom: 10px; color: var(--primary); font-size: 1.5rem; margin-bottom: 25px;"><i class="fa-solid fa-clipboard-check" style="margin-right:10px"></i> Conferência Final</h2>
             <div id="conteudoResumo"></div>
-            <button class="btn-form btn-final" onclick="showAlert('Sucesso!', 'Sua inscrição foi registrada. Prepare-se para a OSFIC 2026!', 'success')">Confirmar inscrição</button>
+            <button id="btnEnviarFinal" class="btn-form btn-final" onclick="enviarInscricao()">Confirmar inscrição</button>
             <button class="btn-form btn-back" onclick="showStep(2)">Voltar e ajustar grupos</button>
         </div>
     </div>
@@ -762,6 +762,70 @@
                 overlay.classList.add('opacity-0', 'pointer-events-none');
             }
         });
+
+        async function enviarInscricao() {
+    // 1. Coleta dados do Orientador (Passo 1)
+    const orientador = {
+        escola: document.getElementById('escola').value,
+        disciplina: document.getElementById('profDisc').value,
+        nome: document.getElementById('profNome').value,
+        email: document.getElementById('profEmail').value,
+        cpf: document.getElementById('profCPF').value,
+        whatsapp: document.getElementById('profZap').value
+    };
+
+    // 2. Verifica se há grupos (Passo 2)
+    if (listaGrupos.length === 0) {
+        return showAlert("Erro", "Adicione pelo menos um grupo antes de enviar.", "error");
+    }
+
+    // 3. Prepara o pacote de dados
+    const payload = {
+        orientador: orientador,
+        grupos: listaGrupos
+    };
+
+    // 4. Feedback visual (Botão muda para "Enviando...")
+    const btn = document.getElementById('btnEnviarFinal');
+    const textoOriginal = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = "Enviando dados...";
+
+    try {
+        // 5. Envia para o PHP (que vamos criar)
+        const resposta = await fetch('salvar_inscricao.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const resultado = await resposta.json();
+
+        if (resultado.sucesso) {
+            // SUCESSO: Mostra mensagem e redireciona ou limpa
+            showAlert('Sucesso!', 'Inscrição realizada com sucesso! ID: ' + resultado.protocolo, 'success');
+            
+            // Opcional: Redirecionar para home após 3 segundos
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 3000);
+        } else {
+            // ERRO DO PHP: Mostra o que deu errado
+            showAlert('Erro ao Salvar', resultado.mensagem || 'Ocorreu um erro desconhecido.', 'error');
+            btn.disabled = false;
+            btn.innerText = textoOriginal;
+        }
+
+    } catch (erro) {
+        // ERRO DE REDE OU ARQUIVO NÃO ENCONTRADO
+        console.error(erro);
+        showAlert('Erro de Conexão', 'Não foi possível conectar ao servidor. Verifique se o arquivo salvar_inscricao.php existe.', 'error');
+        btn.disabled = false;
+        btn.innerText = textoOriginal;
+    }
+}
     </script>
     <div id="transition-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-sm z-[2000] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
         <div class="relative flex items-center justify-center mb-12">
