@@ -1,103 +1,89 @@
 <?php
-// Define que a resposta será um JSON (para o Javascript entender)
 header('Content-Type: application/json');
 
-// --- 1. CONFIGURAÇÕES DO BANCO DE DADOS (Preencha aqui!) ---
-$host = 'localhost';      // Geralmente é 'localhost' na HostGator
-$db   = 'nome_do_seu_banco'; // Coloque o nome exato do banco que você criou
-$user = 'seu_usuario_mysql'; // Seu usuário do MySQL
-$pass = 'sua_senha_mysql';   // Sua senha do MySQL
+// --- CONFIGURAÇÕES DO BANCO (PREENCHA AQUI) ---
+$host = 'localhost';
+$db   = 'nome_do_seu_banco';
+$user = 'seu_usuario_mysql';
+$pass = 'sua_senha_mysql';
 $charset = 'utf8mb4';
+// ----------------------------------------------
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
+$options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC];
 
 try {
-    // Tenta conectar ao Banco
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-    // Se falhar a conexão, avisa o HTML
-    echo json_encode(['sucesso' => false, 'mensagem' => 'Erro de conexão com o banco: ' . $e->getMessage()]);
-    exit;
+    echo json_encode(['sucesso' => false, 'mensagem' => 'Erro Conexão: ' . $e->getMessage()]); exit;
 }
 
-// --- 2. RECEBER OS DADOS DO HTML ---
-// Pega o JSON que veio no corpo da requisição
 $inputJSON = file_get_contents('php://input');
 $dados = json_decode($inputJSON, true);
 
-// Verifica se os dados chegaram
-if (!$dados || !isset($dados['orientador']) || !isset($dados['grupos'])) {
-    echo json_encode(['sucesso' => false, 'mensagem' => 'Dados inválidos ou incompletos recebidos.']);
-    exit;
-}
+if (!$dados) { echo json_encode(['sucesso' => false, 'mensagem' => 'Dados inválidos.']); exit; }
 
-// --- 3. SALVAR TUDO (TRANSAÇÃO) ---
 try {
-    // Inicia uma transação (se der erro no meio, ele desfaz tudo para não deixar dados pela metade)
     $pdo->beginTransaction();
 
-    // A) Identificar o ID da Escola com base na Sigla
+    // 1. Pega ID da Escola
     $stmtEscola = $pdo->prepare("SELECT id FROM escolas WHERE sigla = ?");
     $stmtEscola->execute([$dados['orientador']['escola']]);
     $escola = $stmtEscola->fetch();
-
-    if (!$escola) {
-        throw new Exception("Escola inválida ou não encontrada no banco.");
-    }
+    if (!$escola) throw new Exception("Escola inválida.");
     $escolaId = $escola['id'];
 
-    // B) Salvar o Orientador
-    $sqlOrientador = "INSERT INTO orientadores (escola_id, nome, disciplina, email, cpf, whatsapp) VALUES (?, ?, ?, ?, ?, ?)";
-    $stmtOrientador = $pdo->prepare($sqlOrientador);
-    $stmtOrientador->execute([
-        $escolaId,
-        $dados['orientador']['disciplina'],
-        $dados['orientador']['nome'],
-        $dados['orientador']['email'],
-        $dados['orientador']['cpf'],
-        $dados['orientador']['whatsapp']
-    ]);
-    
-    // Pega o ID que acabou de ser criado para o Orientador
-    $orientadorId = $pdo->lastInsertId();
+    $orientadorId = null;
 
-    // C) Salvar os Grupos e Alunos
+    // --- LÓGICA DE DECISÃO: NOVO ou ATUALIZAÇÃO ---
+    if (!empty($dados['id_orientador'])) {
+        // MODO ATUALIZAÇÃO (UPDATE)
+        $orientadorId = $dados['id_orientador'];
+        
+        // Atualiza dados pessoais
+        $sqlUp = "UPDATE orientadores SET escola_id=?, nome=?, disciplina=?, email=?, cpf=?, whatsapp=? WHERE id=?";
+        $stmtUp = $pdo->prepare($sqlUp);
+        $stmtUp->execute([
+            $escolaId, $dados['orientador']['nome'], $dados['orientador']['disciplina'], 
+            $dados['orientador']['email'], $dados['orientador']['cpf'], $dados['orientador']['whatsapp'], 
+            $orientadorId
+        ]);
+
+        // ESTRATÉGIA SEGURA: Remove grupos antigos e recria (garante sincronia total com o form)
+        // Isso evita lógica complexa de verificar qual aluno foi removido ou adicionado
+        $pdo->prepare("DELETE FROM grupos WHERE orientador_id = ?")->execute([$orientadorId]); 
+        // (O Delete Cascade no banco vai apagar os alunos automaticamente)
+
+    } else {
+        // MODO CRIAÇÃO (INSERT)
+        $sqlIns = "INSERT INTO orientadores (escola_id, nome, disciplina, email, cpf, whatsapp) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmtIns = $pdo->prepare($sqlIns);
+        $stmtIns->execute([
+            $escolaId, $dados['orientador']['nome'], $dados['orientador']['disciplina'], 
+            $dados['orientador']['email'], $dados['orientador']['cpf'], $dados['orientador']['whatsapp']
+        ]);
+        $orientadorId = $pdo->lastInsertId();
+    }
+
+    // 2. Salvar Grupos e Alunos (Igual para os dois casos agora)
     $sqlGrupo = "INSERT INTO grupos (orientador_id, categoria) VALUES (?, ?)";
     $stmtGrupo = $pdo->prepare($sqlGrupo);
-
     $sqlAluno = "INSERT INTO alunos (grupo_id, nome, cpf, nivel_ensino, serie_ano) VALUES (?, ?, ?, ?, ?)";
     $stmtAluno = $pdo->prepare($sqlAluno);
 
     foreach ($dados['grupos'] as $grupo) {
-        // 1. Cria o Grupo
         $stmtGrupo->execute([$orientadorId, $grupo['categoria']]);
         $grupoId = $pdo->lastInsertId();
-
-        // 2. Cria os Alunos deste Grupo
         foreach ($grupo['alunos'] as $aluno) {
-            $stmtAluno->execute([
-                $grupoId,
-                $aluno['nome'],
-                $aluno['cpf'],
-                $aluno['nivel'],
-                $aluno['serie']
-            ]);
+            $stmtAluno->execute([$grupoId, $aluno['nome'], $aluno['cpf'], $aluno['nivel'], $aluno['serie']]);
         }
     }
 
-    // Se chegou até aqui, deu tudo certo! Confirma a gravação.
     $pdo->commit();
-
-    echo json_encode(['sucesso' => true, 'protocolo' => $orientadorId]);
+    echo json_encode(['sucesso' => true, 'protocolo' => $orientadorId, 'modo' => !empty($dados['id_orientador']) ? 'atualizacao' : 'criacao']);
 
 } catch (Exception $e) {
-    // Se deu algum erro, desfaz tudo o que tentou gravar
     $pdo->rollBack();
-    echo json_encode(['sucesso' => false, 'mensagem' => 'Erro ao salvar: ' . $e->getMessage()]);
+    echo json_encode(['sucesso' => false, 'mensagem' => 'Erro: ' . $e->getMessage()]);
 }
 ?>
