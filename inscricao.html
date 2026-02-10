@@ -114,7 +114,7 @@
         .nav-btn.active { color: var(--primary); background: #f0fdf4; }
 
         .input-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
-        @media (min-width: 600px) { .input-row { flex-direction: row; } .input-row > div { flex: 1; min-width: 0; } }
+        @media (min-width: 800px) { .input-row { flex-direction: row; } .input-row > div { flex: 1; min-width: 0; } }
         
         label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #475569; }
         
@@ -209,7 +209,7 @@
     <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-md transition-all duration-300 z-[1100]" id="navbar">
         <div class="nav-container container mx-auto px-6 py-4 flex justify-between items-center transition-all duration-300 relative">
             
-            <a href="index.html" class="flex items-center gap-2 z-50 text-osfic-green text-3xl">
+            <a href="index.html" onclick="irParaInicio(event)" class="flex items-center gap-2 z-50 text-osfic-green text-3xl cursor-pointer">
                 <img src="Logo/osfic_inicial.png" alt="Logo OSFIC" class="nav-logo-img h-14 w-auto object-contain transition-all" style="transform: scale(1.35);">
             </a>
             
