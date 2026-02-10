@@ -349,6 +349,7 @@
     </footer>
 
     <script>
+        let idOrientadorEdicao = null; // Guardará o ID se encontrarmos cadastro
         // --- SCROLL EFFECT NAVBAR (SMOOTH RESIZE) ---
         let lastState = false;
         window.addEventListener("scroll", () => {
@@ -515,10 +516,52 @@
             return erros;
         }
 
-        function validarEAvancar() {
+        async function validarEAvancar() {
             const erros = checkPasso1Completo();
-            if (erros.length > 0) showAlert("Atenção", erros.join("<br>"), "error");
-            else showStep(2);
+            if (erros.length > 0) {
+                showAlert("Atenção", erros.join("<br>"), "error");
+                return;
+            }
+        
+            // Dados do formulário atual
+            const cpfInput = document.getElementById('profCPF').value;
+            const escolaInput = document.getElementById('escola').value;
+        
+            // Botão de feedback visual (opcional)
+            const btn = document.querySelector('#step1 .btn-confirm');
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando...';
+            btn.disabled = true;
+        
+            try {
+                const resp = await fetch(`buscar_dados.php?cpf=${cpfInput}`);
+                const cadastros = await resp.json();
+        
+                // 1. Não encontrou nada? Segue vida normal (Novo Cadastro)
+                if (cadastros.length === 0) {
+                    idOrientadorEdicao = null; // Garante que é novo
+                    resetarTextoBotaoFinal();
+                    showStep(2);
+                } 
+                else {
+                    // 2. Encontrou cadastros. Vamos verificar as escolas.
+                    const cadastroNaMesmaEscola = cadastros.find(c => c.escola_sigla === escolaInput);
+        
+                    if (cadastroNaMesmaEscola) {
+                        // CENÁRIO A: Já tem cadastro NESTA escola
+                        mostrarModalMesmaEscola(cadastroNaMesmaEscola);
+                    } else {
+                        // CENÁRIO B: Tem cadastro, mas em OUTRA(s) escola(s)
+                        mostrarModalOutraEscola(cadastros, escolaInput);
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+                showAlert("Erro", "Não foi possível verificar o cadastro. Verifique sua conexão.", "error");
+            } finally {
+                btn.innerHTML = textoOriginal;
+                btn.disabled = false;
+            }
         }
 
         function showStep(n) { 
@@ -764,68 +807,184 @@
         });
 
         async function enviarInscricao() {
-    // 1. Coleta dados do Orientador (Passo 1)
-    const orientador = {
-        escola: document.getElementById('escola').value,
-        disciplina: document.getElementById('profDisc').value,
-        nome: document.getElementById('profNome').value,
-        email: document.getElementById('profEmail').value,
-        cpf: document.getElementById('profCPF').value,
-        whatsapp: document.getElementById('profZap').value
-    };
-
-    // 2. Verifica se há grupos (Passo 2)
-    if (listaGrupos.length === 0) {
-        return showAlert("Erro", "Adicione pelo menos um grupo antes de enviar.", "error");
-    }
-
-    // 3. Prepara o pacote de dados
-    const payload = {
-        orientador: orientador,
-        grupos: listaGrupos
-    };
-
-    // 4. Feedback visual (Botão muda para "Enviando...")
-    const btn = document.getElementById('btnEnviarFinal');
-    const textoOriginal = btn.innerText;
-    btn.disabled = true;
-    btn.innerText = "Enviando dados...";
-
-    try {
-        // 5. Envia para o PHP (que vamos criar)
-        const resposta = await fetch('salvar_inscricao.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
-
-        const resultado = await resposta.json();
-
-        if (resultado.sucesso) {
-            // SUCESSO: Mostra mensagem e redireciona ou limpa
-            showAlert('Sucesso!', 'Inscrição realizada com sucesso! ID: ' + resultado.protocolo, 'success');
-            
-            // Opcional: Redirecionar para home após 3 segundos
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 3000);
-        } else {
-            // ERRO DO PHP: Mostra o que deu errado
-            showAlert('Erro ao Salvar', resultado.mensagem || 'Ocorreu um erro desconhecido.', 'error');
-            btn.disabled = false;
-            btn.innerText = textoOriginal;
+            // 1. Coleta dados do Orientador (Passo 1)
+            const orientador = {
+                escola: document.getElementById('escola').value,
+                disciplina: document.getElementById('profDisc').value,
+                nome: document.getElementById('profNome').value,
+                email: document.getElementById('profEmail').value,
+                cpf: document.getElementById('profCPF').value,
+                whatsapp: document.getElementById('profZap').value
+            };
+        
+            // 2. Verifica se há grupos (Passo 2)
+            if (listaGrupos.length === 0) {
+                return showAlert("Erro", "Adicione pelo menos um grupo antes de enviar.", "error");
+            }
+        
+            // 3. Prepara o pacote de dados
+            const payload = {
+                id_orientador: idOrientadorEdicao, // <--- ADICIONE ESTA LINHA (pode ser null ou numero)
+                orientador: orientador,
+                grupos: listaGrupos
+            };
+        
+            // 4. Feedback visual (Botão muda para "Enviando...")
+            const btn = document.getElementById('btnEnviarFinal');
+            const textoOriginal = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = "Enviando dados...";
+        
+            try {
+                // 5. Envia para o PHP (que vamos criar)
+                const resposta = await fetch('salvar_inscricao.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+        
+                const resultado = await resposta.json();
+        
+                if (resultado.sucesso) {
+                    // SUCESSO: Mostra mensagem e redireciona ou limpa
+                    showAlert('Sucesso!', 'Inscrição realizada com sucesso! ID: ' + resultado.protocolo, 'success');
+                    
+                    // Opcional: Redirecionar para home após 3 segundos
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 3000);
+                } else {
+                    // ERRO DO PHP: Mostra o que deu errado
+                    showAlert('Erro ao Salvar', resultado.mensagem || 'Ocorreu um erro desconhecido.', 'error');
+                    btn.disabled = false;
+                    btn.innerText = textoOriginal;
+                }
+        
+            } catch (erro) {
+                // ERRO DE REDE OU ARQUIVO NÃO ENCONTRADO
+                console.error(erro);
+                showAlert('Erro de Conexão', 'Não foi possível conectar ao servidor. Verifique se o arquivo salvar_inscricao.php existe.', 'error');
+                btn.disabled = false;
+                btn.innerText = textoOriginal;
+            }
         }
 
-    } catch (erro) {
-        // ERRO DE REDE OU ARQUIVO NÃO ENCONTRADO
-        console.error(erro);
-        showAlert('Erro de Conexão', 'Não foi possível conectar ao servidor. Verifique se o arquivo salvar_inscricao.php existe.', 'error');
-        btn.disabled = false;
-        btn.innerText = textoOriginal;
-    }
-}
+        // --- FUNÇÕES DE LÓGICA DE CADASTRO EXISTENTE ---
+        function mostrarModalMesmaEscola(dados) {
+            const modal = document.getElementById('customModal');
+            document.getElementById('modalTitle').innerText = "Cadastro Encontrado!";
+            document.getElementById('modalIcon').innerHTML = '<i class="fa-solid fa-user-check" style="color:var(--primary); font-size: 3rem;"></i>';
+            document.getElementById('modalText').innerHTML = `
+                Encontramos seu cadastro na <b>${dados.escola_nome}</b>.<br><br>
+                Suas informações e grupos anteriores serão carregados para que você possa fazer atualizações ou adicionar novos grupos.
+            `;
+            
+            document.getElementById('modalButtons').innerHTML = `
+                <button class="btn-modal btn-confirm" onclick="carregarDadosEAvancar(${JSON.stringify(dados).replace(/"/g, '&quot;')})">
+                    Prosseguir e Carregar Dados
+                </button>
+            `;
+            modal.style.display = 'flex';
+        }
+        
+        function mostrarModalOutraEscola(listaCadastros, escolaAtualSigla) {
+            // Pega o nome da primeira escola encontrada diferente da atual para exibir
+            const outro = listaCadastros[0]; 
+            
+            const modal = document.getElementById('customModal');
+            document.getElementById('modalTitle').innerText = "Cadastro em Outra Escola";
+            document.getElementById('modalIcon').innerHTML = '<i class="fa-solid fa-school-flag" style="color:var(--osfic-blue); font-size: 3rem;"></i>';
+            document.getElementById('modalText').innerHTML = `
+                Encontramos um cadastro seu vinculado à <b>${outro.escola_nome}</b>.<br><br>
+                O que deseja fazer?
+            `;
+            
+            // Botão 1: Novo cadastro na escola selecionada
+            // Botão 2: Mudar para a escola antiga e editar
+            
+            // Escapar dados para passar no onclick
+            const dadosOutro = JSON.stringify(outro).replace(/"/g, '&quot;');
+        
+            document.getElementById('modalButtons').innerHTML = `
+                <button class="btn-modal btn-back" style="background: #fff; border: 2px solid var(--primary); color: var(--primary);" onclick="iniciarNovoCadastro()">
+                    Criar Novo na ${escolaAtualSigla}
+                </button>
+                <button class="btn-modal btn-confirm" onclick="mudarEscolaECarregar('${outro.escola_sigla}', ${dadosOutro})">
+                    Atualizar cadastro da ${outro.escola_sigla}
+                </button>
+            `;
+            modal.style.display = 'flex';
+        }
+        
+        function iniciarNovoCadastro() {
+            idOrientadorEdicao = null; // Limpa ID, será um insert novo
+            resetarTextoBotaoFinal();
+            closeModal();
+            showStep(2);
+        }
+        
+        function mudarEscolaECarregar(siglaEscola, dados) {
+            // Muda o select da escola visualmente
+            document.getElementById('escola').value = siglaEscola;
+            // Carrega os dados
+            carregarDadosEAvancar(dados);
+        }
+        
+        function carregarDadosEAvancar(dados) {
+            closeModal();
+            
+            // 1. Define ID global para o envio saber que é UPDATE
+            idOrientadorEdicao = dados.id_orientador;
+            
+            // 2. Preenche campos do Orientador (caso estejam vazios ou para garantir)
+            document.getElementById('profNome').value = dados.nome;
+            document.getElementById('profEmail').value = dados.email;
+            document.getElementById('profDisc').value = dados.disciplina;
+            document.getElementById('profZap').value = dados.whatsapp;
+            
+            // 3. Carrega os Grupos na variável global listaGrupos
+            listaGrupos = []; // Limpa atual
+            
+            // Converte formato do banco para formato do JS
+            dados.grupos.forEach(g => {
+                // Gera um ID temporário numérico para o frontend (Date.now + random)
+                // Não usamos o ID do banco aqui no frontend para manipulação visual, 
+                // pois vamos recriar os grupos no save.
+                const tempId = Date.now() + Math.random(); 
+                
+                listaGrupos.push({
+                    id: tempId,
+                    categoria: g.categoria,
+                    alunos: g.alunos // Já vem formatado do PHP com nome, cpf, nivel, serie
+                });
+            });
+        
+            // 4. Renderiza os cartões
+            renderCards();
+            
+            // 5. Muda o texto do botão final
+            const btnFinal = document.getElementById('btnEnviarFinal');
+            if(btnFinal) {
+                btnFinal.innerText = "Confirmar e Atualizar Inscrição";
+                btnFinal.classList.remove('btn-final'); // remove verde padrão
+                btnFinal.style.backgroundColor = "#0284c7"; // azul update
+                btnFinal.style.color = "white";
+            }
+        
+            // 6. Avança
+            showStep(2);
+        }
+        
+        function resetarTextoBotaoFinal() {
+            const btnFinal = document.getElementById('btnEnviarFinal');
+            if(btnFinal) {
+                btnFinal.innerText = "Confirmar inscrição";
+                btnFinal.style.backgroundColor = ""; // volta ao CSS original
+                btnFinal.classList.add('btn-final');
+            }
+        }
     </script>
     <div id="transition-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-sm z-[2000] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
         <div class="relative flex items-center justify-center mb-12">
