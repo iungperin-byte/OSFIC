@@ -790,29 +790,49 @@
         }
         
         function gerarResumo() {
-            if (listaGrupos.length === 0) return showAlert("Atenção", "Cadastre ao menos um grupo para prosseguir para a Conferência Final.", "info");
+            if (listaGrupos.length === 0) {
+                return showAlert("Atenção", "Cadastre ao menos um grupo para prosseguir para a Conferência Final.", "info");
+            }
+            
             showStep(3);
-            const cats = [{ id: 'ponte', nome: 'Ponte de Palitos', bg: '#fefce8' }, { id: 'catapulta', nome: 'Lançador de Projéteis', bg: '#fff7ed' }, { id: 'carrinho', nome: 'Carrinho Elétrico Solar', bg: '#f0fdf4' }];
+        
+            const cats = [
+                { id: 'ponte', nome: 'Ponte de Palitos', bg: '#fefce8' }, 
+                { id: 'catapulta', nome: 'Lançador de Projéteis', bg: '#fff7ed' }, 
+                { id: 'carrinho', nome: 'Carrinho Elétrico Solar', bg: '#f0fdf4' }
+            ];
+        
+            // Note o uso de escaparHTML() em TODOS os campos abaixo
             let h = `<div class="resumo-section" style="background: #fff;">
                         <div class="resumo-header-main">Dados do Orientador</div>
-                        <div><strong>Escola:</strong> ${document.getElementById('escola').value}</div><hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
-                        <div><strong>Disciplina:</strong> ${document.getElementById('profDisc').value}</div><hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
-                        <div><strong>Nome:</strong> ${document.getElementById('profNome').value}</div><hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
-                        <div><strong>E-mail:</strong> ${document.getElementById('profEmail').value}</div><hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
-                        <div><strong>CPF:</strong> ${document.getElementById('profCPF').value}</div>
+                        <div><strong>Escola:</strong> ${escaparHTML(document.getElementById('escola').value)}</div>
+                        <hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
+                        <div><strong>Disciplina:</strong> ${escaparHTML(document.getElementById('profDisc').value)}</div>
+                        <hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
+                        <div><strong>Nome:</strong> ${escaparHTML(document.getElementById('profNome').value)}</div>
+                        <hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
+                        <div><strong>E-mail:</strong> ${escaparHTML(document.getElementById('profEmail').value)}</div>
+                        <hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
+                        <div><strong>CPF:</strong> ${escaparHTML(document.getElementById('profCPF').value)}</div>
+                        <hr style="border:0; border-top:1px solid #e5e7eb; margin:10px 0;">
+                        <div><strong>WhatsApp:</strong> ${escaparHTML(document.getElementById('profZap').value)}</div>
                     </div>`;
+        
             cats.forEach(c => {
                 const gruposFiltrados = listaGrupos.filter(g => g.categoria === c.id);
+                
                 if(gruposFiltrados.length > 0) {
-                    h += `<div class="resumo-section" style="background: ${c.bg};"><div class="resumo-header-main">Grupos: ${c.nome}</div>`;
+                    h += `<div class="resumo-section" style="background: ${c.bg};">
+                            <div class="resumo-header-main">Grupos: ${c.nome}</div>`;
+                    
                     gruposFiltrados.forEach((g, idx) => {
                         h += `<div style="margin-bottom:20px;">
                                 <span style="font-weight:bold; color:#444; display:block; margin-bottom:10px;">Equipe ${idx + 1}</span>
                                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
                                     ${g.alunos.map(a => `<div style="background:white; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-                                            <strong style="color:var(--primary)">${a.nome}</strong><br>
-                                            <small>CPF: ${a.cpf}</small><br>
-                                            <small>${a.nivel} - ${a.serie}</small>
+                                            <strong style="color:var(--primary)">${escaparHTML(a.nome)}</strong><br>
+                                            <small>CPF: ${escaparHTML(a.cpf)}</small><br>
+                                            <small>${escaparHTML(a.nivel)} - ${escaparHTML(a.serie)}</small>
                                         </div>`).join('')}
                                 </div>
                               </div>`;
@@ -820,8 +840,10 @@
                     h += `</div>`;
                 }
             });
+        
             document.getElementById('conteudoResumo').innerHTML = h;
         }
+
 
         function irParaInicio(event) {
             event.preventDefault();
