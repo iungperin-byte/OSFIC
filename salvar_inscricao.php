@@ -1,11 +1,11 @@
 <?php
 header('Content-Type: application/json');
 
-// --- CONFIGURAÇÕES DO BANCO (PREENCHA AQUI) ---
+// --- 1. CONFIGURAÇÕES DO BANCO DE DADOS ---
 $host = 'localhost';
-$db   = 'nome_do_seu_banco';
-$user = 'seu_usuario_mysql';
-$pass = 'sua_senha_mysql';
+$db   = 'joao4312_osfic';
+$user = 'joao4312_osfic';
+$pass = '81@c?W8B^VGm';
 $charset = 'utf8mb4';
 // ----------------------------------------------
 
@@ -82,11 +82,11 @@ try {
     $pdo->commit();
     // --- 4. ENVIO DE E-MAILS (CONFIRMAÇÃO) ---
     // CONFIGURAÇÃO: Coloque aqui o e-mail da organização que receberá os avisos
-    $emailOrganizacao = 'contato@seusite.com.br'; 
+    $emailOrganizacao = 'organizacao@osfic.com.br'; 
     
     // CONFIGURAÇÃO: Este e-mail DEVE existir na sua hospedagem (ex: nao-responda@seusite.com.br)
     // Se você usar um e-mail que não é do seu domínio (como @gmail), pode cair no spam.
-    $emailRemetente = 'nao-responda@seusite.com.br'; 
+    $emailRemetente = 'nao-responda@osfic.com.br'; 
 
     // --- Montando o E-mail para o Orientador ---
     $assuntoOrientador = "Confirmação de Inscrição - OSFIC 2026";
