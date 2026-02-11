@@ -201,6 +201,37 @@
             position: relative;
             z-index: 10; /* Garante que a logo fique na frente do anel */
         }
+
+        /* --- ANIMAÇÃO ELETROSFERA (CARREGAMENTO DE ENVIO) --- */
+        .loader-atom-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.95); /* Fundo branco levemente transparente */
+            z-index: 3000; /* Bem acima de tudo */
+            display: none; /* Começa escondido */
+            flex-direction: column; justify-content: center; align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .atom-box { position: relative; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; }
+        .atom-nucleus { width: 16px; height: 16px; background: #16a34a; border-radius: 50%; box-shadow: 0 0 10px rgba(22, 163, 74, 0.5); z-index: 2; }
+
+        /* Os anéis da eletrosfera */
+        .atom-orbit {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 2px solid transparent; /* Transparente para ver só as pontas */
+            border-top-color: #0ea5e9; /* Azul OSFIC */
+            border-bottom-color: #0ea5e9;
+        }
+
+        .atom-orbit:nth-child(1) { animation: spin-orbit 1s linear infinite; }
+        .atom-orbit:nth-child(2) { transform: rotate(60deg); animation: spin-orbit-2 1s linear infinite; }
+        .atom-orbit:nth-child(3) { transform: rotate(120deg); animation: spin-orbit-3 1s linear infinite; }
+
+        /* Animações mantendo a angulação original */
+        @keyframes spin-orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes spin-orbit-2 { from { transform: rotate(60deg); } to { transform: rotate(420deg); } }
+        @keyframes spin-orbit-3 { from { transform: rotate(120deg); } to { transform: rotate(480deg); } }   
     </style>
 </head>
 
