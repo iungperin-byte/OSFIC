@@ -21,6 +21,19 @@ try {
 $inputJSON = file_get_contents('php://input');
 $dados = json_decode($inputJSON, true);
 
+// --- FUNÇÃO DE LIMPEZA (SANITIZAÇÃO) ---
+function limpar($dado) {
+    if (is_array($dado)) {
+        return array_map('limpar', $dado);
+    }
+    // Remove tags HTML e espaços extras
+    return trim(strip_tags($dado));
+}
+// Aplica a limpeza em tudo o que chegou
+if ($dados) {
+    $dados = limpar($dados);
+}
+
 if (!$dados) { echo json_encode(['sucesso' => false, 'mensagem' => 'Dados inválidos.']); exit; }
 
 try {
