@@ -838,7 +838,7 @@
         });
 
         async function enviarInscricao() {
-            // 1. Coleta dados do Orientador (Passo 1)
+            // 1. Coleta dados
             const orientador = {
                 escola: document.getElementById('escola').value,
                 disciplina: document.getElementById('profDisc').value,
@@ -848,59 +848,55 @@
                 whatsapp: document.getElementById('profZap').value
             };
         
-            // 2. Verifica se há grupos (Passo 2)
             if (listaGrupos.length === 0) {
                 return showAlert("Erro", "Adicione pelo menos um grupo antes de enviar.", "error");
             }
         
-            // 3. Prepara o pacote de dados
             const payload = {
-                id_orientador: idOrientadorEdicao, // <--- ADICIONE ESTA LINHA (pode ser null ou numero)
+                id_orientador: typeof idOrientadorEdicao !== 'undefined' ? idOrientadorEdicao : null,
                 orientador: orientador,
                 grupos: listaGrupos
             };
         
-            // 4. Feedback visual (Botão muda para "Enviando...")
-            const btn = document.getElementById('btnEnviarFinal');
-            const textoOriginal = btn.innerText;
-            btn.disabled = true;
-            btn.innerText = "Enviando dados...";
+            // --- ATIVAR O LOADER ELETROSFERA ---
+            const loader = document.getElementById('loader-envio');
+            const textoLoader = document.getElementById('texto-loader-envio');
+            
+            textoLoader.innerText = "Conectando ao servidor...";
+            loader.style.display = 'flex'; // Mostra a eletrosfera
+            // ------------------------------------
         
             try {
-                // 5. Envia para o PHP (que vamos criar)
                 const resposta = await fetch('salvar_inscricao.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
         
                 const resultado = await resposta.json();
         
+                // Esconde o loader
+                loader.style.display = 'none';
+        
                 if (resultado.sucesso) {
-                    // SUCESSO: Mostra mensagem e redireciona ou limpa
-                    showAlert('Sucesso!', 'Inscrição realizada com sucesso! ID: ' + resultado.protocolo, 'success');
+                    showAlert('Sucesso!', 'Inscrição realizada com sucesso! Verifique seu e-mail.', 'success');
                     
-                    // Opcional: Redirecionar para home após 3 segundos
+                    // Opcional: Redirecionar após o usuário clicar no alerta
                     setTimeout(() => {
                         window.location.href = 'index.html';
-                    }, 3000);
+                    }, 3000); 
+        
                 } else {
-                    // ERRO DO PHP: Mostra o que deu errado
                     showAlert('Erro ao Salvar', resultado.mensagem || 'Ocorreu um erro desconhecido.', 'error');
-                    btn.disabled = false;
-                    btn.innerText = textoOriginal;
                 }
         
             } catch (erro) {
-                // ERRO DE REDE OU ARQUIVO NÃO ENCONTRADO
                 console.error(erro);
-                showAlert('Erro de Conexão', 'Não foi possível conectar ao servidor. Verifique se o arquivo salvar_inscricao.php existe.', 'error');
-                btn.disabled = false;
-                btn.innerText = textoOriginal;
+                loader.style.display = 'none'; // Garante que some se der erro
+                showAlert('Erro de Conexão', 'Não foi possível conectar ao servidor.', 'error');
             }
         }
+
 
         // --- FUNÇÕES DE LÓGICA DE CADASTRO EXISTENTE ---
         function mostrarModalMesmaEscola(dados) {
@@ -1017,6 +1013,7 @@
             }
         }
     </script>
+    
     <div id="transition-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-sm z-[2000] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
         <div class="relative flex items-center justify-center mb-12">
             <div class="loader-ring"></div>
