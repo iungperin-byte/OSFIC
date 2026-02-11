@@ -1070,6 +1070,7 @@
 		    }
 		});
     </script>
+	
 	<div id="transition-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-sm z-[2000] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
 	    <div class="relative flex items-center justify-center mb-8">
 	        <div class="loader-ring"></div>
@@ -1077,8 +1078,64 @@
 	    </div>
 	    <p class="text-osfic-dark font-semibold text-sm animate-pulse mt-10">Carregando formulário de inscrição...</p>
 	</div>
+	
+	<div id="cookie-banner" class="fixed bottom-0 left-0 w-full bg-gray-900/95 backdrop-blur text-white p-4 z-[3000] hidden border-t border-gray-700 shadow-2xl">
+	    <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+	        <div class="text-sm text-gray-300 text-center md:text-left">
+	            <p><i class="fa-solid fa-cookie-bite text-yellow-500 mr-2"></i> Utilizamos cookies para melhorar sua experiência no portal da OSFIC.</p>
+	        </div>
+	        <div class="flex gap-3">
+	            <button onclick="aceitarCookies()" class="bg-osfic-green hover:bg-green-600 text-white px-6 py-2 rounded-full text-sm font-bold transition shadow-lg">
+	                Aceitar
+	            </button>
+	        </div>
+	    </div>
+	</div>
+	
+	<script>
+	    // Lógica de Cookies (Validade: 7 dias)
+	    function verificarCookies() {
+	        const cookieName = "osfic_cookie_consent";
+	        const storedData = localStorage.getItem(cookieName);
+	        
+	        if (storedData) {
+	            const data = JSON.parse(storedData);
+	            const agora = new Date().getTime();
+	            const diasPassados = (agora - data.timestamp) / (1000 * 60 * 60 * 24);
+	
+	            // Se aceitou há menos de 7 dias, não mostra o banner
+	            if (diasPassados < 7) {
+	                return; 
+	            }
+	        }
+	        
+	        // Se não tem cookie ou já expirou, mostra o banner
+	        document.getElementById('cookie-banner').classList.remove('hidden');
+	    }
+	
+	    function aceitarCookies() {
+	        const cookieName = "osfic_cookie_consent";
+	        const dados = {
+	            aceito: true,
+	            timestamp: new Date().getTime() // Salva a hora exata do clique
+	        };
+	        
+	        localStorage.setItem(cookieName, JSON.stringify(dados));
+	        
+	        // Efeito visual de saída
+	        const banner = document.getElementById('cookie-banner');
+	        banner.style.opacity = '0';
+	        banner.style.transition = 'opacity 0.5s ease';
+	        setTimeout(() => banner.classList.add('hidden'), 500);
+	    }
+	
+	    // Executa ao carregar a página
+	    window.addEventListener('load', verificarCookies);
+	</script>
+	
 </body>
 </html>
+
 
 
 
