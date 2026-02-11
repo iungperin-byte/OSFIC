@@ -3,10 +3,11 @@ header('Content-Type: application/json');
 
 // CONFIGURAÇÕES DO BANCO (Preencha igual ao salvar_inscricao.php)
 $host = 'localhost';
-$db   = 'nome_do_seu_banco';
-$user = 'seu_usuario_mysql';
-$pass = 'sua_senha_mysql';
+$db   = 'joao4312_osfic';
+$user = 'joao4312_osfic';
+$pass = '81@c?W8B^VGm';
 $charset = 'utf8mb4';
+
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC];
