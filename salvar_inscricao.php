@@ -93,72 +93,86 @@ try {
     }
 
     $pdo->commit();
-    // --- 4. ENVIO DE E-MAILS (CONFIRMAÇÃO) ---
-    // CONFIGURAÇÃO: Coloque aqui o e-mail da organização que receberá os avisos
+        // --- 4. ENVIO DE E-MAILS (CONFIRMAÇÃO COMPLETA) ---
     $emailOrganizacao = 'organizacao@osfic.com.br'; 
-    
-    // CONFIGURAÇÃO: Este e-mail DEVE existir na sua hospedagem (ex: nao-responda@seusite.com.br)
-    // Se você usar um e-mail que não é do seu domínio (como @gmail), pode cair no spam.
     $emailRemetente = 'nao-responda@osfic.com.br'; 
 
-    // --- Montando o E-mail para o Orientador ---
-    $assuntoOrientador = "Confirmação de Inscrição - OSFIC 2026";
-    
-    // Mensagem em HTML
-    $msgOrientador = "
-    <html>
-    <head><title>Confirmação de Inscrição</title></head>
-    <body style='font-family: Arial, sans-serif;'>
-        <h2 style='color: #0284c7;'>Olá, " . $dados['orientador']['nome'] . "!</h2>
-        <p>Recebemos sua inscrição/atualização com sucesso para a <b>OSFIC 2026</b>.</p>
-        <p><b>Escola:</b> " . $dados['orientador']['escola'] . "<br>
-        <b>Protocolo/ID:</b> " . $orientadorId . "</p>
-        <hr>
-        <h3>Grupos Cadastrados:</h3>
-        <ul>";
+    // --- MONTAGEM DO RESUMO DETALHADO DOS GRUPOS ---
+    $resumoGruposHtml = "";
+    $categoriasNomes = [
+        'ponte' => 'Ponte de Palitos',
+        'catapulta' => 'Lançador de Projéteis',
+        'carrinho' => 'Carrinho Elétrico Solar'
+    ];
+
+    foreach ($dados['grupos'] as $grupo) {
+        $nomeCat = $categoriasNomes[$grupo['categoria']] ?? $grupo['categoria'];
+        $resumoGruposHtml .= "
+        <div style='margin-bottom: 15px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #ffffff;'>
+            <b style='color: #1a73e8; font-size: 16px; display: block; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;'>
+                Categoria: " . $nomeCat . "
+            </b>";
         
-    foreach ($dados['grupos'] as $g) {
-        $msgOrientador .= "<li><b>Categoria:</b> " . ucfirst($g['categoria']) . " (" . count($g['alunos']) . " alunos)</li>";
+        foreach ($grupo['alunos'] as $idx => $aluno) {
+            $resumoGruposHtml .= "
+            <div style='margin-bottom: 8px; font-size: 14px;'>
+                <span style='color: #555;'>Aluno " . ($idx + 1) . ":</span> <b>" . $aluno['nome'] . "</b><br>
+                <span style='font-size: 12px; color: #777;'>
+                    CPF: " . $aluno['cpf'] . " | Série: " . $aluno['serie'] . " | Nível: " . $aluno['nivel'] . "
+                </span>
+            </div>";
+        }
+        $resumoGruposHtml .= "</div>";
     }
 
-    $msgOrientador .= "
-        </ul>
-        <hr>
-        <p style='font-size: 12px; color: #666;'>Este é um e-mail automático, por favor não responda.</p>
-    </body>
-    </html>
-    ";
+    // --- MONTAGEM DOS DADOS DO ORIENTADOR ---
+    $conteudoDadosGerais = "
+        <div style='background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #dee2e6;'>
+            <p><strong>Protocolo de Registro:</strong> #" . $orientadorId . "</p>
+            <p><strong>Nome do Orientador:</strong> " . $dados['orientador']['nome'] . "</p>
+            <p><strong>CPF:</strong> " . $dados['orientador']['cpf'] . "</p>
+            <p><strong>E-mail:</strong> " . $dados['orientador']['email'] . "</p>
+            <p><strong>WhatsApp:</strong> " . $dados['orientador']['whatsapp'] . "</p>
+            <p><strong>Escola:</strong> " . $dados['orientador']['escola'] . "</p>
+            <p><strong>Disciplina:</strong> " . $dados['orientador']['disciplina'] . "</p>
+        </div>
+        <h3 style='color: #0056b3; margin-top: 25px;'>Equipes e Integrantes:</h3>
+        " . $resumoGruposHtml;
 
-    // --- Montando o E-mail para a Organização ---
-    $assuntoOrg = "Nova Inscrição: " . $dados['orientador']['nome'];
-    $msgOrg = "
-    <html>
-    <body>
-        <h3>Nova atividade no sistema OSFIC</h3>
-        <p><b>Orientador:</b> " . $dados['orientador']['nome'] . "<br>
-        <b>Escola:</b> " . $dados['orientador']['escola'] . "<br>
-        <b>WhatsApp:</b> " . $dados['orientador']['whatsapp'] . "<br>
-        <b>Ação:</b> " . (!empty($dados['id_orientador']) ? 'Atualização de Cadastro' : 'Novo Cadastro') . "</p>
-    </body>
-    </html>
-    ";
-
-    // --- Cabeçalhos (Headers) para aceitar HTML e definir o Remetente ---
+    // --- CABEÇALHOS (HEADERS) ---
     $headers  = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
     $headers .= "From: OSFIC <$emailRemetente>" . "\r\n";
-    $headers .= "Reply-To: $emailRemetente" . "\r\n";
     $headers .= "X-Mailer: PHP/" . phpversion();
 
-    // --- Envia os dois e-mails ---
-    // O '@' na frente serve para evitar mostrar erros na tela se o servidor de e-mail falhar momentaneamente
+    // --- E-MAIL PARA O ORIENTADOR ---
+    $assuntoOrientador = "Confirmação de Inscrição - OSFIC 2026";
+    $msgOrientador = "<html><body style='font-family: Arial, sans-serif; max-width: 600px; margin: auto;'>
+        <h2 style='color: #2e7d32;'>Inscrição Confirmada - OSFIC 2026</h2>
+        <p>Olá, <b>" . $dados['orientador']['nome'] . "</b>. Seus dados foram processados com sucesso.</p>
+        " . $conteudoDadosGerais . "
+        <p style='margin-top: 20px; font-size: 12px; color: #888;'>Este comprovante foi gerado automaticamente pelo sistema da Olimpíada Sergipana Fundamental de Inovação e Ciências.</p>
+    </body></html>";
+
+    // --- E-MAIL PARA A ORGANIZAÇÃO ---
+    $acao = (!empty($dados['id_orientador']) ? 'CADASTRO ATUALIZADO' : 'NOVO CADASTRO');
+    $assuntoOrg = "[$acao] " . $dados['orientador']['nome'];
+    $msgOrg = "<html><body style='font-family: Arial, sans-serif; max-width: 600px; margin: auto;'>
+        <h2 style='color: #d32f2f;'>$acao - SISTEMA OSFIC</h2>
+        " . $conteudoDadosGerais . "
+        <p style='background: #fff3cd; padding: 10px; border-radius: 5px; margin-top: 15px;'>
+            <strong>Aviso:</strong> Verifique se os dados acima estão em conformidade com o edital.
+        </p>
+    </body></html>";
+
+    // --- ENVIO ---
     @mail($dados['orientador']['email'], $assuntoOrientador, $msgOrientador, $headers);
     @mail($emailOrganizacao, $assuntoOrg, $msgOrg, $headers);
     
     echo json_encode(['sucesso' => true, 'protocolo' => $orientadorId, 'modo' => !empty($dados['id_orientador']) ? 'atualizacao' : 'criacao']);
 
 } catch (Exception $e) {
-    $pdo->rollBack();
+    if ($pdo->inTransaction()) $pdo->rollBack();
     echo json_encode(['sucesso' => false, 'mensagem' => 'Erro: ' . $e->getMessage()]);
 }
 ?>
