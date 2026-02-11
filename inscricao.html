@@ -426,6 +426,16 @@
         let alunosTemporarios = [];
         let editandoId = null;
 
+        function escaparHTML(texto) {
+            if (!texto) return "";
+            return texto
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
         function showAlert(titulo, texto, tipo = 'info') {
             const modal = document.getElementById('customModal');
             document.getElementById('modalTitle').innerText = titulo;
@@ -903,7 +913,6 @@
                 showAlert('Erro de Conexão', 'Não foi possível conectar ao servidor.', 'error');
             }
         }
-
 
 
         // --- FUNÇÕES DE LÓGICA DE CADASTRO EXISTENTE ---
