@@ -862,8 +862,10 @@
             const loader = document.getElementById('loader-envio');
             const textoLoader = document.getElementById('texto-loader-envio');
             
-            textoLoader.innerText = "Conectando ao servidor...";
-            loader.style.display = 'flex'; // Mostra a eletrosfera
+            if (loader && textoLoader) {
+                textoLoader.innerText = "Conectando ao servidor...";
+                loader.style.display = 'flex';
+            }
             // ------------------------------------
         
             try {
@@ -876,15 +878,20 @@
                 const resultado = await resposta.json();
         
                 // Esconde o loader
-                loader.style.display = 'none';
+                if (loader) loader.style.display = 'none';
         
                 if (resultado.sucesso) {
-                    showAlert('Sucesso!', 'Inscrição realizada com sucesso! Verifique seu e-mail.', 'success');
+                    // MENSAGEM ATUALIZADA AQUI
+                    showAlert(
+                        'Inscrição Confirmada!', 
+                        'Sua inscrição foi realizada com sucesso!<br><br>Um e-mail de confirmação foi enviado para o endereço do orientador cadastrado (verifique também sua caixa de spam).<br><br>Em breve, a organização entrará em contato com mais detalhes.', 
+                        'success'
+                    );
                     
-                    // Opcional: Redirecionar após o usuário clicar no alerta
+                    // Redireciona após 6 segundos (dá tempo de ler a mensagem)
                     setTimeout(() => {
                         window.location.href = 'index.html';
-                    }, 3000); 
+                    }, 6000); 
         
                 } else {
                     showAlert('Erro ao Salvar', resultado.mensagem || 'Ocorreu um erro desconhecido.', 'error');
@@ -892,10 +899,11 @@
         
             } catch (erro) {
                 console.error(erro);
-                loader.style.display = 'none'; // Garante que some se der erro
+                if (loader) loader.style.display = 'none';
                 showAlert('Erro de Conexão', 'Não foi possível conectar ao servidor.', 'error');
             }
         }
+
 
 
         // --- FUNÇÕES DE LÓGICA DE CADASTRO EXISTENTE ---
